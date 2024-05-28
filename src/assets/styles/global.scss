@@ -1,0 +1,22 @@
+.page__{
+  &search{
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2.5px 2px #d8dfeb;
+  }
+  &main{
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2.5px 2px #d8dfeb;
+  }
+  &pagination{
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 6px;
+    display: flex;
+    justify-content: flex-end;
+    box-shadow: 0 2.5px 2px #d8dfeb;
+  }
+}
