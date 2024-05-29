@@ -1,5 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import List from './views/list'
+import Layout from '@/layout'
 
 
 export default createRouter({
@@ -7,7 +8,15 @@ export default createRouter({
   routes: [
     {
       path: '/',
-      component: List
+      component: Layout,
+      redirect: '/list',
+      children: [
+        {
+          name: 'list',
+          path: 'list',
+          component: List
+        }
+      ]
     }
   ]
 })

@@ -1,17 +1,16 @@
 import {reactive} from 'vue'
+import {genTable as renderTable} from './render'
 export function useTable({columns}) {
   const state = reactive({
-    data: []
+    data: [],
+    checkedAll: false,
+    columns,
+    indeterminate: false
   })
 
   function genTable() {
     return  <div class="page__main">
-      <ElTable border data={state.data}>
-        {columns.map(item => {
-          const {slots} = item
-          return <ElTableColumn {...item}>{slots}</ElTableColumn>
-        })}
-      </ElTable>
+      {renderTable(state)}
     </div>
   }
 

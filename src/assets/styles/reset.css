@@ -17,13 +17,16 @@ body{
   --el-color-primary: #005BF5;
   --el-color-primary-light-5: #004CCC;
   --el-color-primary-light-3: #004CCC;
-  --el-color-primary-light-7: #fff;
+  --el-color-primary-light-7: #004CCC;
   --el-color-primary-light-8: #fff;
   --el-color-primary-light-9: #fff;
   --el-color-primary-dark-2: #0748B8;
   --bg-color: #f0f2f5;
+  --border: 1px solid #ebeef5;
   --el-text-color-regular: #333;
   --el-text-color-primary: #000;
+  --el-font-size-base: 12px;
+  --el-font-size-small: 12px;
 }
 
 #app, body, html {
@@ -31,10 +34,28 @@ body{
   -webkit-overflow-scrolling: touch;
 }
 
-.el-table{
-  border-radius: 4px;
-  --el-table-header-bg-color: #f2f5fa;
+div.el-table{
+  font-size: 12px;
+  /* --el-table-header-bg-color: #f2f5fa; */
   --el-table-header-text-color: #000;
+}
+div.el-table .el-table__cell{
+  padding: 4px 0;
+}
+div.el-table .cell{
+  padding: 0 8px;
+}
+div.el-select__wrapper{
+  font-size: 12px;
+}
+div.el-pagination{
+  --el-pagination-font-size: 12px;
+}
+button.el-button+.el-button{
+  margin-left: 8px;
+}
+button.el-button{
+  padding: 8px 12px;
 }
 
 ::-webkit-scrollbar {

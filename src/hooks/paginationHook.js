@@ -2,7 +2,7 @@ import { reactive } from "vue";
 export function usePagination() {
   const state = reactive({
     page: 1,
-    pageSize: 20,
+    pageSize: 50,
     total: 400
   })
 
