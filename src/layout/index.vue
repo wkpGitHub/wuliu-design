@@ -1,8 +1,9 @@
 <script lang="jsx">
+import SideBar from './sideBar'
 export default {
   setup() {
     return () => <div class="layout__container">
-      <div class="layout__sideBar"></div>
+      <SideBar />
       <div class="layout__content">
         <div class="layout__header">
           <span>logo</span>
@@ -31,15 +32,7 @@ export default {
   &container {
     display: flex;
     height: 100%;
-  }
-
-  &sideBar {
-    flex-shrink: 0;
-    width: 180px;
-    height: 100%;
-    background: #14181f;
-    display: flex;
-    flex-direction: column;
+     
   }
 
   &content {

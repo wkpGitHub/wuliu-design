@@ -20,14 +20,14 @@ export function useForm({form, fieldList, labelWidth, labelPosition, inline, spa
     }
   })
 
-  function genForm () {
+  function renderForm () {
     return <el-form style={{display: 'grid', 'grid-template-columns': `repeat(${span}, 1fr)`}} class="lj-form" ref={formRef} model={state.form} label-width={labelWidth} label-position={labelPosition} inline={inline}>
       {state.fieldList.map(item => renderItem(item, state.form))}
     </el-form>
   }
 
   return {
-    genForm,
+    renderForm,
     formRef,
     formState: state
   }

@@ -14,7 +14,7 @@ export default {
     }
   },
   setup(props, {emit}) {
-    const {genForm, formRef, formState} = useForm({fieldList: props.fieldList, labelWidth: 80, form: props.form})
+    const {renderForm, formRef, formState} = useForm({fieldList: props.fieldList, labelWidth: 60, form: props.form})
     const state = reactive({
       loading: false
     })
@@ -28,7 +28,7 @@ export default {
     }
 
     return () => <el-dialog class="page__dialog" model-value={true} title="新增" draggable onClose={() => emit('close')} close-on-click-modal={false}>{{
-      default: () => genForm(),
+      default: () => renderForm(),
       footer: () => <div>
         <el-button type="primary" loading={state.loading} onClick={confirm}>保存</el-button>
         <el-button onClick={() => emit('close')}>取消</el-button>

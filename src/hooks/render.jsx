@@ -1,72 +1,73 @@
 
 /* 这个文件只处理渲染逻辑 */
-import {ref} from 'vue'
+import {computed, ref} from 'vue'
 export function genTable(state) {
-  function changeCheckStatus(isCheckAllBox, v) {
-    if (isCheckAllBox) {
-      state.data.forEach(item => item._checked = v)
-    } 
+  // 全选
+  const checkedAll = computed(() => {
     const {length} = state.data
-    // 如果有数据
+    const checkLength = state.data.filter(item => item._checked)?.length
     if (length) {
-      const checkLength = state.data.filter(item => item._checked).length
-      // 如果有勾选
-      if (checkLength) {
-        if (checkLength === length) {
-          state.checkedAll = true
-          state.indeterminate = false
-        } else {
-          state.indeterminate = true
-        }
-      } else {
-        state.indeterminate = false
-        state.checkedAll = false
-      }
+      return length === checkLength
     } else {
-      state.indeterminate = false
-      state.checkedAll = false
+      return false
     }
+  })
+  // 半勾选
+  const indeterminate = computed(() => {
+    const {length} = state.data
+    const checkLength = state.data.filter(item => item._checked)?.length
+    if (checkLength) {
+      return length !== checkLength
+    } else {
+      return false
+    }
+  })
+
+  function changeCheckStatus(v) {
+    state.data.forEach(item => item._checked = v)
   }
 
   return <ElTable key={state.key} border data={state.data}>
-    {state.columns.map(col => {
-      let {slots, ...otherProps} = col
-      if (col.writeable) {
-        slots = Object.assign({}, {
-          default: ({row}) => {
-            return genField(col, row)
-          }
-        }, slots)
-      }
-
-      // 复选框
-      if (col.type === 'checkbox') {
-        return <ElTableColumn {...otherProps}>{{
-          header() {
-            return <ElCheckbox v-model={state.checkedAll} indeterminate={state.indeterminate} onChange={v => changeCheckStatus(true, v)} />
-          },
-          default({row}) {
-            return <ElCheckbox v-model={row._checked} onChange={() => changeCheckStatus()} />
-          }
-        }}</ElTableColumn>
-      } else if (col.type === 'radio') {
-        return <ElTableColumn {...otherProps}>{{
-          default({row}) {
-            return <ElRadio name="radio" v-model={row._checked} />
-          }
-        }}</ElTableColumn>
-      }
-      return <ElTableColumn {...otherProps}>{{
-        default: slots?.default,
-        header: slots?.header
-      }}</ElTableColumn>
-    })}
+    {state.columns.map(col => genTableColumn({col, changeCheckStatus, checkedAll, indeterminate, fieldList: state.fieldList}))}
   </ElTable>
 }
 
-export function genField(item, form) {
+export function genTableColumn({col, changeCheckStatus, checkedAll, indeterminate, fieldList}) {
+  let {slots, ...otherProps} = col
+  if (col.writeable) {
+    slots = Object.assign({}, {
+      default: ({row}) => {
+        return genField(col, row, fieldList)
+      }
+    }, slots)
+  }
+
+  // 复选框
+  if (col.type === 'checkbox') {
+    return <ElTableColumn {...otherProps}>{{
+      header() {
+        return <ElCheckbox v-model={checkedAll.value} indeterminate={indeterminate.value} onChange={changeCheckStatus} />
+      },
+      default({row}) {
+        return <ElCheckbox v-model={row._checked} />
+      }
+    }}</ElTableColumn>
+  } else if (col.type === 'radio') {
+    return <ElTableColumn {...otherProps}>{{
+      default({row}) {
+        return <ElRadio name="radio" v-model={row._checked} />
+      }
+    }}</ElTableColumn>
+  }
+  return <ElTableColumn {...otherProps}>{{
+    default: slots?.default,
+    header: slots?.header
+  }}</ElTableColumn>
+}
+
+export function genField(item, form, fieldList) {
   if (item.render) {
-    return item.render(item, form)
+    return item.render(item, form, fieldList)
   }
   // 这个后续要做成一个映射表
   switch (item.type) {
@@ -75,7 +76,7 @@ export function genField(item, form) {
         {item.options.map(opt => <ElOption label={opt.label} value={opt.value} key={opt.value} />)}
       </ElSelect>
     case 'table':
-      return genTable({columns: item.columns, data: form[item.prop], key: item.prop, isCheckAll: ref(false), indeterminate: ref(false)})
+      return genTable({columns: item.columns, data: form[item.prop], key: item.prop, fieldList})
     default:
       return <ElInput key={item.prop} v-model={form[item.prop]} placeholder={`请输入${item.label}`} clearable />
   }
@@ -88,31 +89,32 @@ function getSearchItemStyle(item) {
   return _style
 }
 
-export function genFormItem(item, form) {
+export function genFormItem(item, form, fieldList) {
   let {rules = []} = item
   if (item.required) {
     rules.unshift({required: true, message: `${item.label}不能为空！`})
   }
   return <el-form-item style={getSearchItemStyle(item)} label={item.label} prop={item.prop} required={item.required} rules={rules}>
-    {genField(item, form)}
+    {genField(item, form, fieldList)}
   </el-form-item>
 }
 
-export function renderItem(item, form) {
+export function renderItem(item, form, fieldList) {
   if (item.isGroup) {
     return item.render({
-      genChildren: () => item.children.map(c => genFormItem(c, form)),
+      genChildren: () => item.children.map(c => genFormItem(c, form, fieldList)),
       genFormItem,
       children: item.children,
-      form
+      form,
+      fieldList
     })
   } else {
-    return genFormItem(item, form)
+    return genFormItem(item, form, fieldList)
   }
 }
 
 export function genForm (state) {
   return <el-form>
-    {state.fieldList.map(item => renderItem(item, state.form))}
+    {state.fieldList.map(item => renderItem(item, state.form, state.fieldList))}
   </el-form>
 }

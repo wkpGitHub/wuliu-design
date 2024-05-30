@@ -6,7 +6,7 @@ export function usePagination() {
     total: 400
   })
 
-  function genPagination ({sizeChange, currentChange}) {
+  function renderPagination ({sizeChange, currentChange}) {
     return <div class="page__pagination">
       <el-pagination
         v-model:current-page={state.page}
@@ -21,7 +21,7 @@ export function usePagination() {
   }
 
   return {
-    genPagination,
-    pagination: state
+    renderPagination,
+    paginationState: state
   }
 }

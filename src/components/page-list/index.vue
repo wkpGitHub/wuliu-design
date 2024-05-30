@@ -15,7 +15,7 @@ export default {
         apiMap: {}
     },
     setup() {
-        const { genTable, table } = useTable({
+        const { renderTable, table } = useTable({
             columns: [
                 { type: 'checkbox', fixed: 'left', width: 35 },
                 { label: 'Date', prop: 'date', width: 180 },
@@ -53,9 +53,9 @@ export default {
             state.currentRow = row
         }
 
-        const { genPagination, pagination } = usePagination()
+        const { renderPagination, paginationState } = usePagination()
 
-        const { genSearch, searchState } = useSearch({
+        const { renderSearch, searchState } = useSearch({
             fieldList: [
                 {
                     label: '名称', prop: 'name', type: '', defaultValue: '', onChange(v, form, fieldList) {
@@ -86,29 +86,17 @@ export default {
 
 
         const formFieldList = [
-            {
-                isGroup: true,
-                
-                render({ genChildren }) {
-                    return <div class="page__card" style={{gridColumn: 'span 2'}}>
-                        <h4>标题</h4>
-                        {genChildren()}
-                    </div>
-                },
-                children: [
-                    { label: '名称', prop: 'name' },
-                    { label: '名称2', prop: 'name2' },
-                    { label: '名称3', prop: 'name3' },
-                ]
-            },
+            { label: '名称', prop: 'name' },
+            { label: '名称2', prop: 'name2' },
+            { label: '名称3', prop: 'name3' },
             { label: '状态', prop: 'status', required: true, type: 'select', options: [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }] },
             {
                 label: '表格', type: 'table', prop: 'users', span: 2, value: [{ name: 'kp', age: 32 }, { name: 'kp', age: 32 }], columns: [
                     { label: '名称', prop: 'name', writeable: true },
                     { label: '年龄', prop: 'age' },
-                    {label: 'cc', slots: {
+                    {label: '操作', width: 50, slots: {
                         default() {
-                            return <ElButton>删除</ElButton>
+                            return <ElButton link type="danger">删除</ElButton>
                         }
                     }}
                 ]
@@ -116,31 +104,29 @@ export default {
         ]
 
         function sizeChange(pageSize) {
-            pagination.page = 1
-            pagination.pageSize = pageSize
+            paginationState.page = 1
+            paginationState.pageSize = pageSize
             getTableData()
         }
 
         function currentChange(page) {
-            pagination.page = page
+            paginationState.page = page
             getTableData()
         }
 
         function search() {
-            pagination.page = 1
-            console.log(table.data)
-            debugger
+            paginationState.page = 1
             getTableData()
         }
 
         function getTableData() {
             console.log(searchState.form)
-            table.data = Array.from({ length: pagination.pageSize }, () => ({
+            table.data = Array.from({ length: paginationState.pageSize }, () => ({
                 date: Math.random(),
                 name: Math.random().toString(16),
                 address: 'No. 189, Grove St, Los Angeles',
             }))
-            pagination.total = Math.floor(Math.random() * 1000)
+            paginationState.total = Math.floor(Math.random() * 1000)
         }
         getTableData()
 
@@ -152,13 +138,13 @@ export default {
         const checkedList = computed(() => table.data?.filter(item => item._checked) || [])
 
         return () => <div class="page-list">
-            {genSearch({ search })}
+            {renderSearch({ search })}
             <div class="page__operate">
                 <ElButton type="primary" onClick={() => state.isShowModal = true}>新增</ElButton>
                 <ElButton type="danger" disabled={checkedList.value.length === 0} plain>删除</ElButton>
             </div>
-            {genTable()}
-            {genPagination({
+            {renderTable()}
+            {renderPagination({
                 sizeChange,
                 currentChange
             })}

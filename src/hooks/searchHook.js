@@ -48,7 +48,7 @@ export function useSearch({ fieldList }) {
     return _style
   }
 
-  function genSearch({ search }) {
+  function renderSearch({ search }) {
     return <div class="page__search">
         <div class="page__search-content">
           {showFieldList.value.map(item => <div class="page__search-item" style={getSearchItemStyle(item)}>
@@ -66,7 +66,7 @@ export function useSearch({ fieldList }) {
   }
 
   return {
-    genSearch,
+    renderSearch,
     searchState: state
   }
 }

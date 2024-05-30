@@ -46,10 +46,10 @@ export default {
         }
       }
     ]
-    const { genForm, formRef, formState } = useForm({ fieldList: fieldList, labelWidth: 80, span: 4, form: { rb: [{}, {}] } })
+    const { renderForm, formRef, formState } = useForm({ fieldList: fieldList, labelWidth: 80, span: 4, form: { rb: [{}, {}] } })
     return () => <PageHandler>
       <div class="ma-4">
-        {genForm()}
+        {renderForm()}
       </div>
     </PageHandler>
   }
