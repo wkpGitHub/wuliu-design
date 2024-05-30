@@ -59,7 +59,7 @@ export function useSearch({ fieldList }) {
         <div class="page__search-btns">
           <ElButton type="primary" onClick={search}>查询</ElButton>
           <ElButton onClick={() => reset(search)}>重置</ElButton>
-          <ElButton class="square-btn" icon={state.showMore ? ArrowUpBold : ArrowDownBold} onClick={() => {state.showMore = !state.showMore}}></ElButton>
+          {state.fieldList?.length > state.span && <ElButton class="square-btn" icon={state.showMore ? ArrowUpBold : ArrowDownBold} onClick={() => {state.showMore = !state.showMore}}></ElButton>}
         </div>
 
     </div>

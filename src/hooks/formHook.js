@@ -1,15 +1,15 @@
 import { reactive, ref, watch } from "vue";
-import { genForm as renderForm } from "./render";
-export function useForm({fieldList}) {
+import { renderItem } from "./render";
+export function useForm({form, fieldList, labelWidth, labelPosition, inline, span=2}) {
   const defaultVals = fieldList.reduce((total, current) => {
     if (current.value) {
       total[current.prop] = current.value
     }
     return total
   }, {})
-  
+
   const state = reactive({
-    form: { ...defaultVals },
+    form: { ...defaultVals, ...form },
     fieldList
   })
   const formRef = ref()
@@ -21,8 +21,8 @@ export function useForm({fieldList}) {
   })
 
   function genForm () {
-    return <el-form>
-      {renderForm(state)}
+    return <el-form style={{display: 'grid', 'grid-template-columns': `repeat(${span}, 1fr)`}} class="lj-form" ref={formRef} model={state.form} label-width={labelWidth} label-position={labelPosition} inline={inline}>
+      {state.fieldList.map(item => renderItem(item, state.form))}
     </el-form>
   }
 

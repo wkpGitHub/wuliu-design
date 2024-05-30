@@ -1,31 +1,30 @@
 
+/* 这个文件只处理渲染逻辑 */
 import {ref} from 'vue'
 export function genTable(state) {
   function changeCheckStatus(isCheckAllBox, v) {
     if (isCheckAllBox) {
-      state.indeterminate = v
       state.data.forEach(item => item._checked = v)
-    } else {
-      const {length} = state.data
-      // 如果有数据
-      if (length) {
-        const checkLength = state.data.filter(item => item._checked).length
-        // 如果有勾选
-        if (checkLength) {
-          if (checkLength === length) {
-            state.checkedAll = true
-            state.indeterminate = false
-          } else {
-            state.indeterminate = true
-          }
-        } else {
+    } 
+    const {length} = state.data
+    // 如果有数据
+    if (length) {
+      const checkLength = state.data.filter(item => item._checked).length
+      // 如果有勾选
+      if (checkLength) {
+        if (checkLength === length) {
+          state.checkedAll = true
           state.indeterminate = false
-          state.checkedAll = false
+        } else {
+          state.indeterminate = true
         }
       } else {
         state.indeterminate = false
         state.checkedAll = false
       }
+    } else {
+      state.indeterminate = false
+      state.checkedAll = false
     }
   }
 
@@ -52,7 +51,7 @@ export function genTable(state) {
         }}</ElTableColumn>
       } else if (col.type === 'radio') {
         return <ElTableColumn {...otherProps}>{{
-          default() {
+          default({row}) {
             return <ElRadio name="radio" v-model={row._checked} />
           }
         }}</ElTableColumn>
@@ -69,6 +68,7 @@ export function genField(item, form) {
   if (item.render) {
     return item.render(item, form)
   }
+  // 这个后续要做成一个映射表
   switch (item.type) {
     case 'select':
       return <ElSelect key={item.prop} v-model={form[item.prop]} placeholder={`请选择${item.label}`} clearable>
@@ -81,8 +81,19 @@ export function genField(item, form) {
   }
 }
 
+
+function getSearchItemStyle(item) {
+  const _style = {}
+  if (item.span) _style['grid-column'] = `span ${item.span}`
+  return _style
+}
+
 export function genFormItem(item, form) {
-  return <el-form-item label={item.label} prop={item.prop}>
+  let {rules = []} = item
+  if (item.required) {
+    rules.unshift({required: true, message: `${item.label}不能为空！`})
+  }
+  return <el-form-item style={getSearchItemStyle(item)} label={item.label} prop={item.prop} required={item.required} rules={rules}>
     {genField(item, form)}
   </el-form-item>
 }
