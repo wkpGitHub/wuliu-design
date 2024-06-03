@@ -1,6 +1,6 @@
 
 /* 这个文件只处理渲染逻辑 */
-import {computed, ref} from 'vue'
+import {computed, watch} from 'vue'
 export function genTable(state) {
   // 全选
   const checkedAll = computed(() => {
@@ -41,7 +41,7 @@ export function genTableColumn({col, changeCheckStatus, checkedAll, indeterminat
       }
     }, slots)
   }
-
+ 
   // 复选框
   if (col.type === 'checkbox') {
     return <ElTableColumn {...otherProps}>{{
@@ -69,14 +69,27 @@ export function genField(item, form, fieldList) {
   if (item.render) {
     return item.render(item, form, fieldList)
   }
+  const popperOptions = {
+    modifiers: [
+      {
+        name: 'offset',
+        options: { offset: [0, 4] }
+      }
+    ]
+  }
+  // watch(form, (v) => {
+  //   console.log(v)
+  // })
   // 这个后续要做成一个映射表
   switch (item.type) {
     case 'select':
-      return <ElSelect key={item.prop} v-model={form[item.prop]} placeholder={`请选择${item.label}`} clearable>
+      return <ElSelect key={item.prop} v-model={form[item.prop]} placeholder={`请选择${item.label}`} clearable popper-options={popperOptions}>
         {item.options.map(opt => <ElOption label={opt.label} value={opt.value} key={opt.value} />)}
       </ElSelect>
     case 'table':
       return genTable({columns: item.columns, data: form[item.prop], key: item.prop, fieldList})
+    case 'date':
+      return  <el-date-picker type={item.dateType} key={item.prop} v-model={form[item.prop]} start-placeholder={`请选择开始${item.label}`}  end-placeholder={`请选择结束${item.label}`}/>
     default:
       return <ElInput key={item.prop} v-model={form[item.prop]} placeholder={`请输入${item.label}`} clearable />
   }

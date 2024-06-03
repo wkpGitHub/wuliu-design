@@ -2,7 +2,7 @@ import { reactive, watch, computed } from "vue";
 import { genField } from "./render";
 import { ArrowDownBold, ArrowUpBold } from '@element-plus/icons-vue'
 
-export function useSearch({ fieldList }) {
+export function useSearch({ fieldList, labelWidth, onSearch, onReset }) {
   const defaultVals = fieldList.reduce((total, current) => {
     if (current.value) {
       total[current.prop] = current.value
@@ -11,35 +11,46 @@ export function useSearch({ fieldList }) {
   }, {})
   const state = reactive({
     form: { ...defaultVals },
-    fieldList,
     showMore: false,
     span: 6
   })
 
   const showFieldList = computed(() => {
     if (state.showMore) {
-      return state.fieldList 
+      return fieldList 
     } else {
-      return state.fieldList.slice(0, state.span)
+      return fieldList.slice(0, state.span)
     }
   })
 
   fieldList.forEach(filed => {
+    if (fieldList.dependOns?.length) {
+      watchValues = fieldList.dependOns.map(key => () => state.form[key])
+      watch(watchValues, values => {
+        // const valueMap = 
+        if (filed.changeValue) {
+          state.form[filed.prop] = filed.changeValue({dependOnValues})
+        }
+        if (filed.changeConfig) {
+          Object.assign(filed, filed.changeConfig(filed, dependOnValues))
+        }
+      })
+    }
     if (filed.onChange) {
-      watch(() => state.form[filed.prop], v => filed.onChange(v, state.form, state.fieldList))
+      watch(() => state.form[filed.prop], v => filed.onChange(v, state.form, fieldList))
     }
   })
 
-  function reset(search) {
+  function reset() {
     state.form = { ...defaultVals }
-    search()
+    onSearch()
+    onReset()
   }
 
-  function getLabelWidth(item) {
-    if (item.width) {
-      return item.width + 'px';
+  function getLabelWidth() {
+    if (labelWidth) {
+      return {width: labelWidth + 'px'};
     }
-    return '80px'
   }
 
   function getSearchItemStyle(item) {
@@ -48,18 +59,18 @@ export function useSearch({ fieldList }) {
     return _style
   }
 
-  function renderSearch({ search }) {
+  function renderSearch() {
     return <div class="page__search">
         <div class="page__search-content">
           {showFieldList.value.map(item => <div class="page__search-item" style={getSearchItemStyle(item)}>
-            <label>{item.label}</label>
+            <label style={getLabelWidth(item)}>{item.label}</label>
             {genField(item, state.form)}
           </div>)}
         </div>
         <div class="page__search-btns">
-          <ElButton type="primary" onClick={search}>查询</ElButton>
-          <ElButton onClick={() => reset(search)}>重置</ElButton>
-          {state.fieldList?.length > state.span && <ElButton class="square-btn" icon={state.showMore ? ArrowUpBold : ArrowDownBold} onClick={() => {state.showMore = !state.showMore}}></ElButton>}
+          <ElButton type="primary" onClick={onSearch}>查询</ElButton>
+          <ElButton onClick={reset}>重置</ElButton>
+          {fieldList?.length > state.span && <ElButton class="square-btn" icon={state.showMore ? ArrowUpBold : ArrowDownBold} onClick={() => {state.showMore = !state.showMore}}></ElButton>}
         </div>
 
     </div>

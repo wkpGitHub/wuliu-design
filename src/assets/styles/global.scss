@@ -1,9 +1,10 @@
 .page__{
   &search{
-    padding: 12px 16px;
+    padding: 12px;
     background-color: #fff;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     display: flex;
+    box-shadow: 0 1px #e6e8eb;
     &-content{
       flex: auto;
       display: grid;
@@ -27,9 +28,11 @@
       }
     }
   }
+
   &main{
     background-color: #fff;
-    margin: 0 16px;
+    // border-radius: 4px;
+    margin: 0 12px;
     flex: auto;
     overflow: hidden;
     .el-table, .el-table__inner-wrapper{
@@ -40,17 +43,62 @@
     height: 40px;
     display: flex;
     flex-shrink: 0;
-    margin: 0 16px;
+    margin: 0 12px;
+    justify-content: space-between;
+  }
+  &table-btn{
+    display: flex;
+    font-size: 16px;
+    align-items: center;
+    margin-bottom: 8px;
+    .btn-item{
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      border-radius: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #55585f;
+      &:hover{
+        background: rgba(11, 16, 25, .06);
+      }
+    }
   }
   &pagination{
     flex-shrink: 0;
     height: 50px;
-    padding: 0 16px;
+    margin: 0 12px 12px 12px;
+    padding: 0 12px;
     background-color: #fff;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin: 0 16px 16px 16px;
+    border: var(--border);
+    border-top: 0;
+    li.number{
+      padding: 0;
+      background: #FFF;
+      font-size: 12px;
+      min-width: 32px;
+      height: 32px;
+      line-height: 32px;
+      cursor: pointer;
+      box-sizing: border-box;
+      text-align: center;
+      margin: 0 4px 0 0;
+      color: #33363C;
+      &:hover{
+        color: #005BF5;
+      }
+      &.is-active{
+        color: #005BF5;
+        cursor: default;
+        background: rgba(0, 91, 245, .1);
+        border-radius: 4px;
+        font-weight: normal;
+      }
+    }
   }
   &dialog{
     .el-dialog__body{

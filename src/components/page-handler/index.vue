@@ -5,8 +5,8 @@
     </main>
     <div class="page__footer">
       <slot name="footer" :save="save">
-        <el-button :loading="loading" type="primary" @click="save">保存</el-button>
         <el-button @click="cancel">取消</el-button>
+        <el-button :loading="loading" type="primary" @click="save">保存</el-button>
       </slot>
     </div>
   </div>

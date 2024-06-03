@@ -1,6 +1,6 @@
 <script lang="jsx">
-import { Discount, Setting, Expand } from '@element-plus/icons-vue'
-import { reactive } from 'vue'
+import { Discount, Setting } from '@element-plus/icons-vue'
+import { reactive, onUnmounted, withModifiers } from 'vue'
 
 export default {
   setup() {
@@ -9,7 +9,8 @@ export default {
       expand: false,
       isShowDrawer: false,
       hideMenu: false,
-      currentSubMenu: Array.from({ length: 20 }, () => { })
+      currentSubMenu: Array.from({ length: 10 }, () => { }),
+      openeds: ['1-1', '2-1']
     })
 
     function hideSubMenu() {
@@ -20,8 +21,13 @@ export default {
       }, 200);
     }
 
+    window.addEventListener('click', hideSubMenu)
+    onUnmounted(() => {
+      window.removeEventListener('click', hideSubMenu)
+    })
+
     function genExpandMenu() {
-      return <el-menu class="expand-menu first-menu">
+      return <el-menu class="expand-menu first-menu" router default-openeds={state.openeds}>
         <el-sub-menu index="1">{{
           title: () => <>
             <el-icon><Discount /></el-icon>
@@ -31,7 +37,7 @@ export default {
             <el-sub-menu class="second-menu" index="1-1">{{
               title: () => <span>开发</span>,
               default: () => <>
-                <el-menu-item index="2">
+                <el-menu-item index="/list2">
                   <span>新品开发</span>
                 </el-menu-item>
               </>
@@ -39,11 +45,11 @@ export default {
             <el-sub-menu class="second-menu" index="2-1">{{
               title: () => <span>产品</span>,
               default: () => <>
-                <el-menu-item index="2111">
+                <el-menu-item index="/list">
                   <span>产品管理</span>
                 </el-menu-item>
-                <el-menu-item index="2111">
-                  <span>绑定产品</span>
+                <el-menu-item index="/edit">
+                  <span>编辑产品</span>
                 </el-menu-item>
                 <el-menu-item index="2111">
                   <span>辅料管理</span>
@@ -73,7 +79,7 @@ export default {
     }
 
     function genCollapseMenu() {
-      return <el-menu class="first-menu">
+      return <el-menu class="first-menu" onClick={withModifiers(() => {}, ['stop'])}>
         <el-menu-item index="2111">
           <a onClick={() => state.isShowDrawer = true}>
             <el-icon><Discount /></el-icon>
@@ -111,10 +117,10 @@ export default {
 
     return () => <div class={['layout__sideBar', { expand: state.expand }]}>
       <div class="layout__sideBar-content">
-        <div class="logo"></div>
+        <div class="logo"><i class="iconfont icon-LOGO"></i></div>
         {state.expand ? genExpandMenu() : genCollapseMenu()}
         <div class="handel-collapse">
-          <div class="collapse-box" onClick={() => state.expand = !state.expand}><el-icon><Expand /></el-icon></div>
+          <div class="collapse-box" onClick={() => state.expand = !state.expand}><i class="iconfont icon-expand"></i></div>
         </div>
       </div>
       {genDrawer()}
@@ -157,6 +163,13 @@ export default {
     display: flex;
     padding-left: 14px;
     align-items: center;
+    i{
+      display: block;
+      width: 28px;
+      height: 28px;
+      font-size: 28px;
+      color: #005bf5;
+    }
   }
 
   .handel-collapse {
@@ -188,7 +201,6 @@ export default {
 
   .el-menu {
     background-color: var(--dark-bg-2);
-
     .el-menu-item {
       border-right: none;
       padding: 0 !important;
@@ -220,6 +232,9 @@ export default {
         background-color: var(--dark-bg-1) !important;
       }
     }
+    .el-icon{
+      margin-right: 0 !important;
+    }
   }
 
   .el-menu.first-menu {
@@ -233,10 +248,6 @@ export default {
       min-width: auto;
       padding: 0 !important;
       line-height: 16px;
-
-      i {
-        margin-right: 0;
-      }
 
       &:hover {
         background-color: #3c4146 !important;
@@ -280,8 +291,11 @@ export default {
         .el-menu-item {
           height: 36px !important;
 
-          span {
+          span, a {
             padding-left: 50px;
+            align-items: flex-start !important;
+            color: #fffffff2;
+            text-decoration: none;
           }
         }
       }

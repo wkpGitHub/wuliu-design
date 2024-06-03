@@ -5,6 +5,7 @@ import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import '@/assets/styles/reset.css'
 import '@/assets/styles/global.scss'
+import '@/assets/iconfont/iconfont.css'
 import router from './router'
 
 createApp(App)

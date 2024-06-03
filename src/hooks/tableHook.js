@@ -1,16 +1,28 @@
-import {reactive, computed, ref} from 'vue'
-import {genTableColumn} from './render'
-export function useTable({columns}) {
+import { reactive, computed, ref } from 'vue'
+import { genTableColumn } from './render'
+export function useTable({ columns, withTableHandler, tableHandlerSlot, tableHandlerWidth, editRow, deleteRow }) {
   const state = reactive({
-    data: [],
-    columns
+    data: []
   })
+
+  if (withTableHandler) {
+    columns.push({
+      label: '操作', fixed: 'right', width: tableHandlerWidth, slots: {
+        default({ row, $index }) {
+          return tableHandlerSlot ? tableHandlerSlot({editRow, deleteRow, row, $index}) : <>
+            <ElButton link type="primary" onClick={() => editRow(row, $index)}>编辑</ElButton>
+            <ElButton link type="danger" onClick={() => deleteRow(row, $index)}>删除</ElButton>
+          </>
+        }
+      }
+    })
+  }
 
   const tableRef = ref()
 
   // 全选
   const checkedAll = computed(() => {
-    const {length} = state.data
+    const { length } = state.data
     const checkLength = state.data.filter(item => item._checked)?.length
     if (length) {
       return length === checkLength
@@ -20,7 +32,7 @@ export function useTable({columns}) {
   })
   // 半勾选
   const indeterminate = computed(() => {
-    const {length} = state.data
+    const { length } = state.data
     const checkLength = state.data.filter(item => item._checked)?.length
     if (checkLength) {
       return length !== checkLength
@@ -34,16 +46,16 @@ export function useTable({columns}) {
   }
 
   function renderTable() {
-    return  <div class="page__main">
+    return <div class="page__main">
       <ElTable ref={tableRef} border data={state.data}>
-        {columns.map(col => genTableColumn({col, changeCheckStatus, checkedAll, indeterminate}))}
+        {columns.map(col => genTableColumn({ col, changeCheckStatus, checkedAll, indeterminate }))}
       </ElTable>
     </div>
   }
 
   return {
     renderTable,
-    table: state,
+    tableState: state,
     tableRef
   }
 }

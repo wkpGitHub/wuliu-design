@@ -23,11 +23,14 @@ body{
   --el-color-primary-light-9: #fff;
   --el-color-primary-dark-2: #0748B8;
   --bg-color: #f0f2f5;
-  --border: 1px solid #ebeef5;
+  --border: 1px solid #D9DBDE;
   --el-text-color-regular: #333;
   --el-text-color-primary: #000;
   --el-font-size-base: 12px;
   --el-font-size-small: 12px;
+  --el-transition-duration: 0;
+  --el-border-color: #bfc2c7;
+  --el-menu-icon-width: 18px;
 }
 
 #app, body, html {
@@ -37,6 +40,7 @@ body{
 
 div.el-table{
   font-size: 12px;
+  --el-table-border-color: #D9DBDE;
   /* --el-table-header-bg-color: #f2f5fa; */
   --el-table-header-text-color: #000;
 }
@@ -57,6 +61,9 @@ button.el-button+.el-button{
 }
 button.el-button{
   padding: 8px 12px;
+}
+.el-popper__arrow{
+  display: none;
 }
 .el-dialog{
   padding: 0 !important;
@@ -95,7 +102,5 @@ button.el-button{
 ::-webkit-scrollbar-track {
   background: #f8f8f8;
 }
-::-webkit-scrollbar-track {
-  background-color: #ebedf0;
-}
+
 

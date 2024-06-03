@@ -11,7 +11,8 @@ export default {
     form: {
       type: Object,
       default: () => ({})
-    }
+    },
+    title: String
   },
   setup(props, {emit}) {
     const {renderForm, formRef, formState} = useForm({fieldList: props.fieldList, labelWidth: 60, form: props.form})
@@ -22,16 +23,20 @@ export default {
     function confirm() {
       state.loading = true
       formRef.value.validate(valid => {
-        console.log(valid, 'vvvvvvvvvvvvvvv')
+        if (valid) {
+          emit('save', state)
+          console.log(valid, 'vvvvvvvvvvvvvvv')
+        } else {
+          state.loading = false
+        }
       })
-      console.log(formState)
     }
 
-    return () => <el-dialog class="page__dialog" model-value={true} title="新增" draggable onClose={() => emit('close')} close-on-click-modal={false}>{{
+    return () => <el-dialog class="page__dialog" model-value={true} title={props.title} draggable onClose={() => emit('close')} close-on-click-modal={false}>{{
       default: () => renderForm(),
       footer: () => <div>
-        <el-button type="primary" loading={state.loading} onClick={confirm}>保存</el-button>
         <el-button onClick={() => emit('close')}>取消</el-button>
+        <el-button type="primary" loading={state.loading} onClick={confirm}>保存</el-button>
       </div>
     }}</el-dialog>
   }
