@@ -1,6 +1,16 @@
 
 /* 这个文件只处理渲染逻辑 */
 import {computed, watch} from 'vue'
+
+export const popperOptions = {
+  modifiers: [
+    {
+      name: 'offset',
+      options: { offset: [0, 4] }
+    }
+  ]
+}
+
 export function genTable(state) {
   // 全选
   const checkedAll = computed(() => {
@@ -69,29 +79,25 @@ export function genField(item, form, fieldList) {
   if (item.render) {
     return item.render(item, form, fieldList)
   }
-  const popperOptions = {
-    modifiers: [
-      {
-        name: 'offset',
-        options: { offset: [0, 4] }
-      }
-    ]
-  }
-  // watch(form, (v) => {
-  //   console.log(v)
-  // })
+
   // 这个后续要做成一个映射表
   switch (item.type) {
     case 'select':
-      return <ElSelect key={item.prop} v-model={form[item.prop]} placeholder={`请选择${item.label}`} clearable popper-options={popperOptions}>
+      return <ElSelect key={item.prop} v-model={form[item.prop]} placeholder={item.placeholder} style={item.style} clearable popper-options={popperOptions}>
         {item.options.map(opt => <ElOption label={opt.label} value={opt.value} key={opt.value} />)}
       </ElSelect>
     case 'table':
       return genTable({columns: item.columns, data: form[item.prop], key: item.prop, fieldList})
     case 'date':
-      return  <el-date-picker type={item.dateType} key={item.prop} v-model={form[item.prop]} start-placeholder={`请选择开始${item.label}`}  end-placeholder={`请选择结束${item.label}`}/>
+      return  <el-date-picker type={item.dateType} key={item.prop} v-model={form[item.prop]} start-placeholder={item.startPlaceholder}  end-placeholder={item.endPlaceholder} style={item.style} popper-options={popperOptions} />
+    case 'radio':
+      return <el-radio-group v-model={form[item.prop]} style={item.style}>
+        {item.options.map(o => {
+          return item.isButton ? <el-radio-button size={item.size} value={o.value} key={o.value}>{o.label}</el-radio-button> : <el-radio value={o.value} key={o.value}>{o.label}</el-radio>
+        })}
+      </el-radio-group>
     default:
-      return <ElInput key={item.prop} v-model={form[item.prop]} placeholder={`请输入${item.label}`} clearable />
+      return <ElInput key={item.prop} v-model={form[item.prop]} placeholder={item.placeholder} style={item.style} clearable />
   }
 }
 
