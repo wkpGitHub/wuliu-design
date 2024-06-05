@@ -2,10 +2,11 @@
 import { useSearch } from '@/hooks/searchHook'
 import { useTable } from '@/hooks/tableHook'
 import { usePagination } from '@/hooks/paginationHook'
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import DialogForm from '@/components/dialogForm'
-import { computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import TableColumSort from '@/hooks/components/table-column-sort'
+
 
 export default {
     name: 'page-list',
@@ -33,6 +34,12 @@ export default {
         api: {}
     },
     setup(props, { slots }) {
+        const state = reactive({
+            modalTitle: '新增',
+            isShowModal: false,
+            currentRow: {},
+        })
+
         const { renderTable, tableState } = useTable({
             columns: props.tableColumns,
             withTableHandler: props.withTableHandler,
@@ -93,12 +100,6 @@ export default {
         }
         getTableData()
 
-        const state = reactive({
-            modalTitle: '新增',
-            isShowModal: false,
-            currentRow: {}
-        })
-
         const checkedList = computed(() => tableState.data?.filter(item => item._checked) || [])
 
         function addRow() {
@@ -112,17 +113,16 @@ export default {
         return () => <div class="page-list">
             {renderSearch()}
             <div class="page__operate">
-                <div style={{display: 'flex'}}>
+                <div style={{ display: 'flex' }}>
                     <ElButton type="primary" onClick={addRow}>新增</ElButton>
                     <ElButton type="danger" disabled={checkedList.value.length === 0} plain>删除</ElButton>
                     <ElButton onClick={addRow}>审核</ElButton>
                 </div>
                 <div class="page__table-btn">
-                    <div class="btn-item">
-                        <i class="iconfont icon-setting"></i>
-                    </div>
+                    <TableColumSort v-model:columns={tableState.columns} />
                 </div>
             </div>
+
             {renderTable()}
             {renderPagination()}
             {state.isShowModal && <DialogForm title={state.modalTitle} fieldList={props.formFieldList} form={state.currentRow} onClose={() => state.isShowModal = false} />}

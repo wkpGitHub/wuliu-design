@@ -1,6 +1,7 @@
 
 /* 这个文件只处理渲染逻辑 */
 import {computed, watch} from 'vue'
+import ComboGroup from './components/combo-group'
 
 export const popperOptions = {
   modifiers: [
@@ -43,6 +44,8 @@ export function genTable(state) {
 }
 
 export function genTableColumn({col, changeCheckStatus, checkedAll, indeterminate, fieldList}) {
+  // 隐藏列
+  if (col.hidden) return null
   let {slots, ...otherProps} = col
   if (col.writeable) {
     slots = Object.assign({}, {
@@ -54,7 +57,7 @@ export function genTableColumn({col, changeCheckStatus, checkedAll, indeterminat
  
   // 复选框
   if (col.type === 'checkbox') {
-    return <ElTableColumn {...otherProps}>{{
+    return <ElTableColumn width={col.width || 30} resizable={false} label-class-name="table-checkbox-cell" {...otherProps}>{{
       header() {
         return <ElCheckbox v-model={checkedAll.value} indeterminate={indeterminate.value} onChange={changeCheckStatus} />
       },
@@ -83,9 +86,13 @@ export function genField(item, form, fieldList) {
   // 这个后续要做成一个映射表
   switch (item.type) {
     case 'select':
-      return <ElSelect key={item.prop} v-model={form[item.prop]} placeholder={item.placeholder} style={item.style} clearable popper-options={popperOptions}>
+      return <ElSelect key={item.prop} v-model={form[item.prop]} placeholder={item.placeholder} multiple={item.multiple} collapse-tags style={item.style} clearable popper-options={popperOptions}>
         {item.options.map(opt => <ElOption label={opt.label} value={opt.value} key={opt.value} />)}
       </ElSelect>
+    // case 'select':
+    //   return <ElSelect key={item.prop} v-model={form[item.prop]} placeholder={item.placeholder} multiple={item.multiple} collapse-tags style={item.style} clearable popper-options={popperOptions}>
+    //     {item.options.map(opt => <ElOption label={opt.label} value={opt.value} key={opt.value} />)}
+    //   </ElSelect>
     case 'table':
       return genTable({columns: item.columns, data: form[item.prop], key: item.prop, fieldList})
     case 'date':
@@ -96,6 +103,8 @@ export function genField(item, form, fieldList) {
           return item.isButton ? <el-radio-button size={item.size} value={o.value} key={o.value}>{o.label}</el-radio-button> : <el-radio value={o.value} key={o.value}>{o.label}</el-radio>
         })}
       </el-radio-group>
+    case 'combo': 
+      return <ComboGroup v-model:field={form[item.prop[0]]} v-model:value={form[item.prop[1]]} v-model:list={form[item.prop[2]]} key={item.prop[0]} placeholder={item.placeholder} style={item.style} onSearch={item.onSearch} options={item.options} />
     default:
       return <ElInput key={item.prop} v-model={form[item.prop]} placeholder={item.placeholder} style={item.style} clearable />
   }

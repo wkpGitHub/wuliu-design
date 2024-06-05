@@ -50,6 +50,37 @@ div.el-table {
 div.el-table .el-table__cell {
   padding: 4px 0;
 }
+.remove-border-table .el-table__cell{
+  border-right: 0;
+}
+.el-table.is-scrolling-left.remove-border-table .el-table-fixed-column--left.is-last-column.el-table__cell{
+  border-right: 0;
+}
+.remove-border-table .el-table__header .cell{
+  border-right: var(--border);
+}
+.remove-border-table .el-table__header .table-checkbox-cell .cell{
+  border-right: 0;
+  text-overflow: clip;
+}
+.remove-border-table .el-table__header th:last-child .cell{
+  border-right: 0;
+}
+.remove-border-table .el-table__inner-wrapper:before{
+  height: 0;
+}
+.remove-border-table .el-table__inner-wrapper:after{
+  height: 0;
+}
+.remove-border-table:before{
+  width: 0;
+}
+.remove-border-table:after{
+  width: 0;
+}
+.remove-border-table .el-table__border-left-patch{
+  display: none;
+}
 
 div.el-table .cell {
   padding: 0 8px;
@@ -80,6 +111,9 @@ div.el-select__wrapper.is-focused {
 div.el-date-editor{
   --el-date-editor-daterange-width: 100%;
 }
+div.el-date-editor .el-range-input{
+  width: 49%;
+}
 span.el-radio-button__inner{
   padding: 9px 12px;
 }
@@ -100,33 +134,48 @@ button.el-button+.el-button {
 button.el-button {
   padding: 8px 12px;
 }
+button.el-button--small {
+  padding: 6px 8px;
+}
 
 .el-popper__arrow {
   display: none;
+}
+div.el-popover{
+  --el-popover-padding: 0;
 }
 
 .el-dialog {
   padding: 0 !important;
 
   .el-dialog__header {
-    height: 40px;
+    height: 48px;
     display: flex;
     align-items: center;
     border-bottom: var(--border);
     padding: 0 16px;
 
     .el-dialog__title {
+      line-height: 22px;
       font-size: 16px;
+      color: #0b1019;
+      font-weight: 600;
     }
-  }
-
-  .el-dialog__headerbtn {
-    width: 40px;
-    height: 40px;
+    .el-dialog__close{
+      width: 24px;
+      height: 24px;
+      color: #A6ABB4 !important;
+      border-radius: 2px;
+      &:hover{
+        background-color: #F0F2F5;
+      }
+    }
   }
 
   .el-dialog__footer {
     padding: 16px;
+    box-shadow: 0 -1px #e6e8eb;
+    z-index: 2;
   }
 }
 

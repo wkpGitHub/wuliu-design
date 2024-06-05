@@ -2,12 +2,13 @@ import { reactive, computed, ref } from 'vue'
 import { genTableColumn } from './render'
 export function useTable({ columns, withTableHandler, tableHandlerSlot, tableHandlerWidth, editRow, deleteRow }) {
   const state = reactive({
-    data: []
+    data: [],
+    columns
   })
 
   if (withTableHandler) {
     columns.push({
-      label: '操作', fixed: 'right', width: tableHandlerWidth, slots: {
+      label: '操作', type: 'handler', fixed: 'right', width: tableHandlerWidth, slots: {
         default({ row, $index }) {
           return tableHandlerSlot ? tableHandlerSlot({editRow, deleteRow, row, $index}) : <>
             <ElButton link type="primary" onClick={() => editRow(row, $index)}>编辑</ElButton>
@@ -47,8 +48,8 @@ export function useTable({ columns, withTableHandler, tableHandlerSlot, tableHan
 
   function renderTable() {
     return <div class="page__main">
-      <ElTable ref={tableRef} border data={state.data}>
-        {columns.map(col => genTableColumn({ col, changeCheckStatus, checkedAll, indeterminate }))}
+      <ElTable class="remove-border-table" border ref={tableRef} data={state.data}>
+        {state.columns.map(col => genTableColumn({ col, changeCheckStatus, checkedAll, indeterminate }))}
       </ElTable>
     </div>
   }

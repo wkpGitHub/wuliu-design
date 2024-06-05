@@ -1,5 +1,6 @@
 <script lang="jsx">
 import {useForm} from '@/hooks/formHook'
+import CDialog from '@/hooks/components/c-dialog'
 import {reactive} from 'vue'
 
 export default {
@@ -32,13 +33,13 @@ export default {
       })
     }
 
-    return () => <el-dialog class="page__dialog" model-value={true} title={props.title} draggable onClose={() => emit('close')} close-on-click-modal={false}>{{
+    return () => <CDialog class="page__dialog" theme="drawer" model-value={true} title={props.title} draggable onClose={() => emit('close')} close-on-click-modal={false}>{{
       default: () => renderForm(),
       footer: () => <div>
         <el-button onClick={() => emit('close')}>取消</el-button>
         <el-button type="primary" loading={state.loading} onClick={confirm}>保存</el-button>
       </div>
-    }}</el-dialog>
+    }}</CDialog>
   }
 }
 </script>

@@ -72,7 +72,7 @@ export default {
             </div>
           </div>
         </div>
-        <el-dropdown popper-class="accountDropdown" trigger="click" popper-options={popperOptions}>{{
+        <el-dropdown popper-class="accountDropdown" trigger="click" popper-options={popperOptions} show-arrow={false}>{{
           default() {
             return <div class="account-btn">
               <div class="user-icon">
