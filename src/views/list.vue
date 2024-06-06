@@ -27,11 +27,11 @@ export default {
     const searchFieldList = [
       { type: 'radio', isButton: true, value: 'all', prop: 'r', options: [{ label: '全部', value: 'all' }, { label: '普通商品', value: 'pt' }] },
       {
-        label: '转单号集合转单号集合', prop: 'name', dependOns: ['r', 'dateType2'], changeValue(dependOnValues) {
-          console.log(dependOnValues)
+        label: '转单号集合转单号集合', prop: 'name', dependOns: ['r', 'dateType2'], changeValue(dependOnValues, form) {
+          console.log(dependOnValues, form)
           return 'wkp'
         },
-        changeConfig(config, dependOnValues){
+        changeConfig(config, dependOnValues, form, fieldList){
           return {hidden: dependOnValues.r === 'pt'}
         }
       },
@@ -40,7 +40,7 @@ export default {
         isGroup: true,
         width: 300,
         children: [
-          { type: 'select', prop: 'dateType2', width: 100, options: [{ label: '下单日期', value: 1 }, { label: '发货日期', value: 2 }], value: 1 },
+          { type: 'select', prop: 'dateType2', width: 100, clearable: false, options: [{ label: '下单日期', value: 1 }, { label: '发货日期', value: 2 }], value: 1 },
           { prop: 'status', type: 'date', dateType: 'daterange' },
         ]
       },

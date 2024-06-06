@@ -1,6 +1,7 @@
 import { reactive, watch, withModifiers, onUnmounted } from "vue";
 import { genField, popperOptions } from "./render";
 import { ElButton } from "element-plus";
+import {setDependOn} from './utils'
 
 export function useSearch({ fieldList, onSearch, onReset }) {
   function setValue(total, current) {
@@ -143,26 +144,7 @@ export function useSearch({ fieldList, onSearch, onReset }) {
   setTagMap(fieldList)
 
 
-  fieldList.forEach(filed => {
-    if (filed.dependOns?.length) {
-      const watchValues = filed.dependOns.map(key => () => state.form[key])
-      watch(watchValues, values => {
-        const dependOnValues = values.reduce((total, current, index) => {
-          total[filed.dependOns[index]] = current
-          return total
-        }, {})
-        if (filed.changeValue) {
-          state.form[filed.prop] = filed.changeValue(dependOnValues)
-        }
-        if (filed.changeConfig) {
-          Object.assign(filed, filed.changeConfig(filed, dependOnValues))
-        }
-      })
-    }
-    // if (filed.onChange) {
-    //   watch(() => state.form[filed.prop], v => filed.onChange(v, state.form, fieldList))
-    // }
-  })
+  setDependOn(fieldList, state.form)
 
   function reset() {
     state.form = { ...defaultVals }
