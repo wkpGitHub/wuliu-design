@@ -28,7 +28,7 @@ body {
   --el-text-color-primary: #000;
   --el-font-size-base: 12px;
   --el-font-size-small: 12px;
-  --el-transition-duration: 0;
+  /* --el-transition-duration: 0; */
   --el-border-color: #D9DBDE;
   --el-menu-icon-width: 18px;
 }
@@ -110,6 +110,7 @@ div.el-select__wrapper.is-focused {
 div.el-date-editor{
   --el-date-editor-daterange-width: 100%;
 }
+
 div.el-date-editor .el-range-input{
   width: 49%;
 }

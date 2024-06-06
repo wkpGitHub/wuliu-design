@@ -1,4 +1,4 @@
-import { reactive, watch, computed } from "vue";
+import { reactive, watch, withModifiers, onUnmounted } from "vue";
 import { genField, popperOptions } from "./render";
 import { ElButton } from "element-plus";
 
@@ -144,12 +144,15 @@ export function useSearch({ fieldList, onSearch, onReset }) {
 
 
   fieldList.forEach(filed => {
-    if (fieldList.dependOns?.length) {
-      watchValues = fieldList.dependOns.map(key => () => state.form[key])
+    if (filed.dependOns?.length) {
+      const watchValues = filed.dependOns.map(key => () => state.form[key])
       watch(watchValues, values => {
-        // const valueMap = 
+        const dependOnValues = values.reduce((total, current, index) => {
+          total[filed.dependOns[index]] = current
+          return total
+        }, {})
         if (filed.changeValue) {
-          state.form[filed.prop] = filed.changeValue({dependOnValues})
+          state.form[filed.prop] = filed.changeValue(dependOnValues)
         }
         if (filed.changeConfig) {
           Object.assign(filed, filed.changeConfig(filed, dependOnValues))
@@ -192,12 +195,20 @@ export function useSearch({ fieldList, onSearch, onReset }) {
     onSearch()
   }
 
+  function hideMorePopover() {
+    state.showMore = false
+  }
+  window.addEventListener('click', hideMorePopover)
+  onUnmounted(() => {
+    window.removeEventListener('click', hideMorePopover)
+  })
+
   function genMoreSearch(item) {
     const {children, cols=1} = item
  
-    return <el-popover trigger="click" v-model:visible={state.showMore} show-arrow={false} popper-class="page__search-filter-popover" popper-options={popperOptions}>{{
-      reference: () => <ElButton class="square-btn"><i class="iconfont icon-filter-records"></i></ElButton>,
-      default: () => <div class={`popover-body cols-${cols}`}>
+    return <el-popover trigger="click" visible={state.showMore} show-arrow={false} popper-class="page__search-filter-popover" popper-options={popperOptions}>{{
+      reference: () => <ElButton class="square-btn" onClick={withModifiers(() => state.showMore = true, ['stop'])}><i class="iconfont icon-filter-records"></i></ElButton>,
+      default: () => <div class={`popover-body cols-${cols}`} onClick={withModifiers(() => {}, ['stop'])}>
         <el-scrollbar max-height="380">
           <div class="filter-popover" style={{'grid-template-columns': `repeat(${cols}, 1fr)`}}>
             {children.map(c => <div style={{gridColumn: `span ${c.span || 1}`}}>
@@ -215,6 +226,7 @@ export function useSearch({ fieldList, onSearch, onReset }) {
   }
 
   function genSearchItem(item, notLabelWidth) {
+    if (item.hidden) return null
     setSearchItemStyle(item, notLabelWidth)
     if (item.isMore) {
       return genMoreSearch(item)

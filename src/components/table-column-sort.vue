@@ -78,11 +78,9 @@ export default {
     // 保存并应用
     function save() {
       const columns = state.columns.map(item => {
-        const _item = {...item}
-        if (!item.show) {
-          item.hidden = true
-        }
-        return item
+        const {show, ..._item} = item
+        _item.hidden = !show
+        return _item
       })
       const allColumns = [...state.startColumns, ...columns, ...state.endColumns]
       state.showPopover = false

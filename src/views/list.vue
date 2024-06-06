@@ -7,7 +7,7 @@ export default {
     const tableColumns = [
       { type: 'checkbox', fixed: 'left' },
       { label: '物流单号', prop: 'date', width: 180 },
-      { label: '运输方式', prop: 'name1', width: 180, slots: {default: () => <div>444</div>} },
+      { label: '运输方式', prop: 'name1', width: 180, slots: { default: () => <div>444</div> } },
       { label: '物流商', prop: 'name2', width: 180 },
       { label: '物流渠道', prop: 'name3', width: 180 },
       { label: '发货仓库', prop: 'name4', width: 180 },
@@ -25,35 +25,43 @@ export default {
       { label: 'Address', prop: 'address', width: 280 },
     ]
     const searchFieldList = [
-      { type: 'radio', isButton: true, value: 'all', options: [{ label: '全部', value: 'all' }, { label: '普通商品', value: 'pt' }] },
-      { label: '转单号集合转单号集合', prop: 'name' },
+      { type: 'radio', isButton: true, value: 'all', prop: 'r', options: [{ label: '全部', value: 'all' }, { label: '普通商品', value: 'pt' }] },
+      {
+        label: '转单号集合转单号集合', prop: 'name', dependOns: ['r', 'dateType2'], changeValue(dependOnValues) {
+          console.log(dependOnValues)
+          return 'wkp'
+        },
+        changeConfig(config, dependOnValues){
+          return {hidden: dependOnValues.r === 'pt'}
+        }
+      },
       { label: '报关号集合', prop: 'name' },
       {
         isGroup: true,
         width: 300,
         children: [
-          {type: 'select', prop: 'dateType', width: 100, options: [{label: '下单日期', value: 1}, {label: '发货日期', value: 2}], value: 1},
+          { type: 'select', prop: 'dateType2', width: 100, options: [{ label: '下单日期', value: 1 }, { label: '发货日期', value: 2 }], value: 1 },
           { prop: 'status', type: 'date', dateType: 'daterange' },
         ]
       },
       { label: '目的地二字码集合', prop: 'name' },
       { label: '排除的目的地二字码集合', prop: 'name' },
       { label: '下家供应商', prop: 'xjgy', type: 'select', minWidth: 160, multiple: true, options: [{ label: 'United Arab Emirates', value: 1 }, { label: '北美洲\美国', value: 61 }, { label: '北美洲\巴西', value: 71 }, { label: '日本', value: 81 }, { label: '阿联酋', value: 0 }] },
-      { type: 'combo', value: ['all'], prop: ['search_field', 'search_value', 'seniorSearchList'], width: 320, options: [{ label: '转单号', value: 'all' }, { label: '正式单', value: 'pt' }]},
+      { type: 'combo', value: ['all'], prop: ['search_field', 'search_value', 'seniorSearchList'], width: 320, options: [{ label: '转单号', value: 'all' }, { label: '正式单', value: 'pt' }] },
       {
         isMore: true,
-        cols: 3,
+        cols: 2,
         children: [
           { label: '收件人姓名', prop: 'cname' },
           { label: '收件人公司', prop: 'cc' },
           { label: '收件人地址', prop: 'caddress' },
-          { 
-            isGroup: true, 
+          {
+            isGroup: true,
             span: 2,
             label: '预估其他费用',
             children: [
-              {type: 'select', prop: 'dateType', width: 120, style: {width: '200px'}, options: [{label: '业务日期', value: 'yw'}, {label: '下单日期', value: 'xd'}]},
-              {type: 'date', dateType: 'daterange', prop: 'date', itemWidth: '260px' },
+              { type: 'select', prop: 'dateType', width: 120, style: { width: '200px' }, options: [{ label: '业务日期', value: 'yw' }, { label: '下单日期', value: 'xd' }] },
+              { type: 'date', dateType: 'daterange', prop: 'date', itemWidth: '260px' },
             ]
           }
         ]

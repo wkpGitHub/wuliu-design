@@ -5,7 +5,7 @@ import { usePagination } from '@/hooks/paginationHook'
 import { reactive, computed } from 'vue'
 import DialogForm from '@/components/dialog-form'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import TableColumSort from '@/hooks/components/table-column-sort'
+import TableColumSort from '@/components/table-column-sort'
 import {auth} from '@/request'
 
 export default {
@@ -91,13 +91,11 @@ export default {
         }
 
         function getTableData() {
-            tableState.data = Array.from({ length: paginationState.pageSize }, () => ({
-                id: Math.random(),
-                date: Math.random(),
-                name: Math.random().toString(16),
-                address: 'No. 189, Grove St, Los Angeles',
-            }))
-            paginationState.total = Math.floor(Math.random() * 1000)
+            auth.list({ pageSize: paginationState.pageSize }).then(data => {
+                tableState.data = data.data
+                paginationState.total = data.total
+            })
+            
         }
         getTableData()
 
@@ -112,7 +110,6 @@ export default {
         }
 
         function save({form}) {
-            debugger
             return auth.create(form)
         }
 
