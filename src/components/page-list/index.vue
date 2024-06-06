@@ -3,10 +3,10 @@ import { useSearch } from '@/hooks/searchHook'
 import { useTable } from '@/hooks/tableHook'
 import { usePagination } from '@/hooks/paginationHook'
 import { reactive, computed } from 'vue'
-import DialogForm from '@/components/dialogForm'
+import DialogForm from '@/components/dialog-form'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import TableColumSort from '@/hooks/components/table-column-sort'
-
+import {auth} from '@/request'
 
 export default {
     name: 'page-list',
@@ -92,6 +92,7 @@ export default {
 
         function getTableData() {
             tableState.data = Array.from({ length: paginationState.pageSize }, () => ({
+                id: Math.random(),
                 date: Math.random(),
                 name: Math.random().toString(16),
                 address: 'No. 189, Grove St, Los Angeles',
@@ -110,6 +111,11 @@ export default {
             })
         }
 
+        function save({form}) {
+            debugger
+            return auth.create(form)
+        }
+
         return () => <div class="page-list">
             {renderSearch()}
             <div class="page__operate">
@@ -125,7 +131,7 @@ export default {
 
             {renderTable()}
             {renderPagination()}
-            {state.isShowModal && <DialogForm title={state.modalTitle} fieldList={props.formFieldList} form={state.currentRow} onClose={() => state.isShowModal = false} />}
+            <DialogForm v-model={state.isShowModal} title={state.modalTitle} fieldList={props.formFieldList} form={state.currentRow} onConfirm={save} />
             {slots.default?.()}
         </div>
     }

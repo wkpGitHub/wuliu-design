@@ -1,10 +1,16 @@
-import { reactive } from "vue";
-export function usePagination({onCurrentChange, onSizeChange}) {
+import { reactive, watch } from "vue";
+import store from '@/store'
+export function usePagination({onCurrentChange, onSizeChange, pageSize}) {
   const state = reactive({
     page: 1,
-    pageSize: 50,
+    pageSize: pageSize || store.globalSetting.pageSize,
     total: 400
   })
+  watch(() => store.globalSetting, v => {
+    debugger
+    onSizeChange(pageSize || v.pageSize)
+  })
+  
 
   function renderPagination () {
     return <div class="page__pagination">

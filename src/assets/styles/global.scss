@@ -214,13 +214,20 @@
       }
     }
   }
-  &dialog{
-    .el-dialog__body{
-      padding: 16px 16px 0 16px;
-    }
-  }
 }
 .el-popover{
+  &.global-pop{
+    line-height: 18px;
+    min-width: auto;
+    text-align: left;
+    border-radius: 4px;
+    border: 1px solid #e6e8eb;
+    max-width: 480px;
+    .tag-item {
+      line-height: 16px;
+      padding: 8px 12px;
+    }
+  }
   .footer-end{
     border-top: var(--border);
     display: flex;

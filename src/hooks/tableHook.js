@@ -48,7 +48,7 @@ export function useTable({ columns, withTableHandler, tableHandlerSlot, tableHan
 
   function renderTable() {
     return <div class="page__main">
-      <ElTable class="remove-border-table" border ref={tableRef} data={state.data}>
+      <ElTable row-key="id" class="remove-border-table" border ref={tableRef} data={state.data}>
         {state.columns.map(col => genTableColumn({ col, changeCheckStatus, checkedAll, indeterminate }))}
       </ElTable>
     </div>

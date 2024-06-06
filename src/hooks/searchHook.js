@@ -227,6 +227,27 @@ export function useSearch({ fieldList, onSearch, onReset }) {
     }
   }
 
+  function genTag(tag, index) {
+    const {length} = tag.values
+    if (length > 3) {
+      const _v = tag.values.slice(0, 3).join(' , ') + ` 等${length}项`
+      return <el-popover popper-class="global-pop" placement="bottom-start" offset={4} width={300}>{{
+        reference: () => <div key={index} class="tag-view">
+          <label>{tag.label}：{_v}</label>
+          <i class="iconfont icon-close" onClick={() => removeTags(tag)}></i>
+        </div>,
+        default: () => <el-scrollbar>
+          {tag.values.map(v => <div class="tag-item">{v}</div>)}
+        </el-scrollbar>
+      }}</el-popover>
+    } else {
+      return <div key={index} class="tag-view">
+        <label>{tag.label}：{tag.values.join(' , ')}</label>
+        <i class="iconfont icon-close" onClick={() => removeTags(tag)}></i>
+      </div>
+    }
+  }
+
   function renderSearch() {
     return <div class="page__search">
         <div class="page__search-content">
@@ -237,10 +258,7 @@ export function useSearch({ fieldList, onSearch, onReset }) {
           </div>
         </div>
         {!!state.tags.length && <div class="filter-section">
-          {state.tags.map((tag, index) => <div key={index} class="tag-view">
-            <label>{tag.label}：{tag.values.join(' , ')}</label>
-            <i class="iconfont icon-close" onClick={() => removeTags(tag)}></i>
-          </div>)}
+          {state.tags.map((tag, index) => genTag(tag, index))}
           {state.tags.length > 1 && <i class="close-all iconfont icon-delete" onClick={() => removeTags({}, true)}></i>}
         </div>}
     </div>

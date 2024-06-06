@@ -1,19 +1,25 @@
-import req from './request'
+import req from '../request'
 
 export const auth = {
-  r() {
+  list() {
 
   },
 
-  c() {
+  create(f) {
+    return new Promise(resolve => {
+      setTimeout(resolve, 3000)
+    })
+  },
+
+  update() {
 
   },
 
-  u() {
+  delete() {
 
   },
 
-  d() {
+  bathDelete() {
 
   }
 }

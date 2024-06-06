@@ -1,6 +1,7 @@
 import { reactive, ref, watch } from "vue";
 import { renderItem } from "./render";
-export function useForm({form, fieldList, labelWidth, labelPosition, inline, span=2}) {
+export function useForm(props) {
+  const {form, fieldList, labelWidth=60, labelPosition, inline, span=2} = props
   const defaultVals = fieldList.reduce((total, current) => {
     if (current.value) {
       total[current.prop] = current.value
@@ -13,6 +14,7 @@ export function useForm({form, fieldList, labelWidth, labelPosition, inline, spa
     fieldList
   })
   const formRef = ref()
+  watch(() => props.form, v => state.form = { ...defaultVals, ...v })
 
   fieldList.forEach(filed => {
     if (filed.onChange) {

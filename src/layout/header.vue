@@ -1,6 +1,10 @@
 <script lang="jsx">
 import { reactive, onUnmounted } from 'vue'
 import { CaretBottom } from '@element-plus/icons-vue'
+import request from '@/request'
+import DialogForm from '@/components/dialog-form'
+import store from '@/store'
+
 export default {
   setup() {
     const popperOptions = {
@@ -12,15 +16,34 @@ export default {
       ]
     }
 
+    const setFormFieldList = [
+      { label: '弹窗风格', prop: 'dialog-theme', type: 'select', options: [{label: '弹窗', value: 'dialog'}, {label: '抽屉', value: 'drawer'}]},
+      { label: '默认分页条数', prop: 'pageSize', type: 'select', options: [10,20,50,100].map(value => ({label: `${value}条/页`, value})) }
+    ]
+
     const state = reactive({
+      setDialog: {
+        isShow: false,
+        form: {...store.globalSetting}
+      },
       contextmenu: {
         isShow: false,
         x: 0,
         y: 0,
         list: []
-      },
-
+      }
     })
+
+
+    function handleCommand(command) {
+      if (command === 'set') {
+        state.setDialog.isShow = true
+        state.setDialog.form = {...store.globalSetting}
+      } else if (command === 'logout') {
+        console.log('退出')
+      }
+    }
+
     function onContextmenu(e) {
       e.preventDefault()
       state.contextmenu = {
@@ -31,18 +54,19 @@ export default {
       }
     }
 
-    function hideContextmenu() {
-      state.contextmenu.isShow = false
-    }
-
+    function hideContextmenu() { state.contextmenu.isShow = false }
     window.addEventListener('click', hideContextmenu)
-
     onUnmounted(() => {
       window.removeEventListener('click', hideContextmenu)
     })
 
+    async function saveSetDialog({form}) {
+      debugger
+      store.setGlobalSetting(form)
+    }
+
     return () => {
-      const { contextmenu } = state
+      const { contextmenu, setDialog } = state
       return <div class="layout__header">
         <div class="tags-view">
           <div class="slick-list">
@@ -72,7 +96,7 @@ export default {
             </div>
           </div>
         </div>
-        <el-dropdown popper-class="accountDropdown" trigger="click" popper-options={popperOptions} show-arrow={false}>{{
+        <el-dropdown popper-class="accountDropdown" trigger="click" popper-options={popperOptions} onCommand={handleCommand}>{{
           default() {
             return <div class="account-btn">
               <div class="user-icon">
@@ -84,11 +108,13 @@ export default {
           },
           dropdown() {
             return <el-dropdown-menu class="accountDropdown">
-              <el-dropdown-item>账户中心</el-dropdown-item>
-              <el-dropdown-item>退出登录</el-dropdown-item>
+              <el-dropdown-item command="set">偏好设置</el-dropdown-item>
+              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           }
         }}</el-dropdown>
+
+        <DialogForm v-model={setDialog.isShow} fieldList={setFormFieldList} form={setDialog.form} title="偏好设置" width={300} span={1} labelWidth={90} onConfirm={saveSetDialog} />
 
         {contextmenu.isShow && <ul class="contextmenu" style={{ left: `${contextmenu.x}px`, top: `${contextmenu.y}px` }}>
           <li>刷新当前页面</li>
@@ -234,7 +260,7 @@ export default {
 }
 
 .el-dropdown-menu.accountDropdown {
-  width: 120px;
+  width: 100px;
   padding: 8px 0;
   background: #fff;
   border: none;

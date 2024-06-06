@@ -1,11 +1,11 @@
 import axios from 'axios'
 
-const req = axios.create({
+const request = axios.create({
   baseURL: ''
 })
 
 // 添加请求拦截器
-req.interceptors.request.use(function (config) {
+request.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么
   return config;
 }, function (error) {
@@ -14,7 +14,7 @@ req.interceptors.request.use(function (config) {
 });
 
 // 添加响应拦截器
-req.interceptors.response.use(function (response) {
+request.interceptors.response.use(function (response) {
   // 2xx 范围内的状态码都会触发该函数。
   // 对响应数据做点什么
   return response;
@@ -24,4 +24,4 @@ req.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
-export default req
+export default request

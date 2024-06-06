@@ -38,7 +38,7 @@ export default {
       },
       { label: '目的地二字码集合', prop: 'name' },
       { label: '排除的目的地二字码集合', prop: 'name' },
-      { label: '下家供应商', prop: 'xjgy', type: 'select', minWidth: 160, multiple: true, options: [{ label: 'United Arab Emirates', value: 1 }, { label: '阿联酋', value: 0 }] },
+      { label: '下家供应商', prop: 'xjgy', type: 'select', minWidth: 160, multiple: true, options: [{ label: 'United Arab Emirates', value: 1 }, { label: '北美洲\美国', value: 61 }, { label: '北美洲\巴西', value: 71 }, { label: '日本', value: 81 }, { label: '阿联酋', value: 0 }] },
       { type: 'combo', value: ['all'], prop: ['search_field', 'search_value', 'seniorSearchList'], width: 320, options: [{ label: '转单号', value: 'all' }, { label: '正式单', value: 'pt' }]},
       {
         isMore: true,
