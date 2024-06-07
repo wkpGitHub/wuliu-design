@@ -12,11 +12,11 @@ export const popperOptions = {
   ]
 }
 
-export function genTable(state) {
+export function genTable(config, data) {
   // 全选
   const checkedAll = computed(() => {
-    const {length} = state.data
-    const checkLength = state.data.filter(item => item._checked)?.length
+    const {length} = data
+    const checkLength = data.filter(item => item._checked)?.length
     if (length) {
       return length === checkLength
     } else {
@@ -25,8 +25,8 @@ export function genTable(state) {
   })
   // 半勾选
   const indeterminate = computed(() => {
-    const {length} = state.data
-    const checkLength = state.data.filter(item => item._checked)?.length
+    const {length} = data
+    const checkLength = data.filter(item => item._checked)?.length
     if (checkLength) {
       return length !== checkLength
     } else {
@@ -35,29 +35,29 @@ export function genTable(state) {
   })
 
   function changeCheckStatus(v) {
-    state.data.forEach(item => item._checked = v)
+    data.forEach(item => item._checked = v)
   }
-
-  return <ElTable key={state.key} border data={state.data}>
-    {state.columns.map(col => genTableColumn({col, changeCheckStatus, checkedAll, indeterminate, fieldList: state.fieldList}))}
+  const {columns, prop, ...otherProps} = config || {}
+  return <ElTable {...otherProps} key={prop} border data={data}>
+    {columns.map(col => genTableColumn({col, changeCheckStatus, checkedAll, indeterminate}))}
   </ElTable>
 }
 
-export function genTableColumn({col, changeCheckStatus, checkedAll, indeterminate, fieldList}) {
+export function genTableColumn({col, changeCheckStatus, checkedAll, indeterminate}) {
   // 隐藏列
   if (col.hidden) return null
   let {slots, ...otherProps} = col
   if (col.writeable) {
     slots = Object.assign({}, {
       default: ({row}) => {
-        return genField(col, row, fieldList)
+        return genField(col, row)
       }
     }, slots)
   }
  
   // 复选框
   if (col.type === 'checkbox') {
-    return <ElTableColumn width={col.width || 30} resizable={false} label-class-name="table-checkbox-cell" {...otherProps}>{{
+    return <ElTableColumn width={col.width || 30} resizable={false} label-class-name="no-border-cell" class-name="no-border-cell" {...otherProps}>{{
       header() {
         return <ElCheckbox v-model={checkedAll.value} indeterminate={indeterminate.value} onChange={changeCheckStatus} />
       },
@@ -78,69 +78,70 @@ export function genTableColumn({col, changeCheckStatus, checkedAll, indeterminat
   }}</ElTableColumn>
 }
 
-export function genField(item, form, fieldList) {
-  if (item.render) {
-    return item.render(item, form, fieldList)
+export function genField(config, form) {
+  if (config.render) {
+    return config.render(config, form)
   }
 
-  const {type, label, value, slots, prop, clearable=true, options, ...otherProps} = item
+  const {type, label, defaultValue, formItem, slots, prop, watch, dependOns, changeEffect, clearable=true, options, ...otherProps} = config
 
   // 这个后续要做成一个映射表
   switch (type) {
     case 'select':
-      return <ElSelect key={prop} v-model={form[prop]} collapse-tags clearable={clearable} popper-options={popperOptions} {...otherProps}>
+      // TODO：多个值,既需要value，又需要label
+      return <ElSelect key={prop} v-model={form[prop]} collapse-tags popper-options={popperOptions} {...otherProps}>
         {options.map(opt => <ElOption label={opt.label} value={opt.value} key={opt.value} />)}
       </ElSelect>
     case 'table':
-      return genTable({columns: item.columns, data: form[prop], key: prop, fieldList})
+      return genTable(config, form[prop] || [])
     case 'date':
-      return  <el-date-picker type={item.dateType} key={prop} v-model={form[prop]} popper-options={popperOptions} {...otherProps} />
+      return  <el-date-picker type={config.dateType} key={prop} v-model={form[prop]} popper-options={popperOptions} {...otherProps} />
     case 'radio':
       return <el-radio-group v-model={form[prop]}>
-        {item.options.map(o => {
-          return item.isButton ? <el-radio-button size={item.size} value={o.value} key={o.value}>{o.label}</el-radio-button> : <el-radio value={o.value} key={o.value}>{o.label}</el-radio>
+        {options.map(o => {
+          return config.isButton ? <el-radio-button {...o} key={o.value}>{o.label}</el-radio-button> : <el-radio {...o} key={o.value}>{o.label}</el-radio>
         })}
       </el-radio-group>
     case 'combo': 
       return <ComboGroup v-model:field={form[prop[0]]} v-model:value={form[prop[1]]} v-model:list={form[prop[2]]} key={prop[0]} options={options} {...otherProps} />
     default:
-      return <ElInput key={prop} v-model={form[prop]} placeholder={item.placeholder} clearable={clearable} {...otherProps} />
+      return <ElInput key={prop} v-model={form[prop]} {...otherProps}>{slots}</ElInput>
   }
 }
 
 
-function getSearchItemStyle(item) {
-  const _style = {}
-  if (item.span) _style['grid-column'] = `span ${item.span}`
+function getFormItemStyle(config) {
+  const _style = Object.assign({}, config.formItem?.style)
+  if (config.span) _style['grid-column'] = `span ${config.span}`
   return _style
 }
 
-export function genFormItem(item, form, fieldList) {
-  let {rules = []} = item
-  if (item.required) {
-    rules.unshift({required: true, message: `${item.label}不能为空！`})
+export function genFormItem(config, form) {
+  let {rules = [], formItem} = config
+  if (config.required) {
+    rules.unshift({required: true, message: `${config.label}不能为空！`})
   }
-  return <el-form-item style={getSearchItemStyle(item)} label={item.label} prop={item.prop} required={item.required} rules={rules}>
-    {genField(item, form, fieldList)}
+  return <el-form-item style={getFormItemStyle(config)} label={config.label} prop={config.prop} required={config.required} rules={rules} {...formItem}>
+    {genField(config, form)}
   </el-form-item>
 }
 
-export function renderItem(item, form, fieldList) {
-  if (item.isGroup) {
-    return item.render({
-      genChildren: () => item.children.map(c => genFormItem(c, form, fieldList)),
+export function renderItem(config, form) {
+  if (config.isGroup) {
+    return config.render({
+      genChildren: () => config.children.map(c => genFormItem(c, form)),
       genFormItem,
-      children: item.children,
-      form,
-      fieldList
+      children: config.children,
+      form
     })
   } else {
-    return genFormItem(item, form, fieldList)
+    return genFormItem(config, form)
   }
 }
 
-export function genForm (state) {
-  return <el-form>
-    {state.fieldList.map(item => renderItem(item, state.form, state.fieldList))}
+export function genForm (props) {
+  const {form, configList, ...otherProps} = props
+  return <el-form {...otherProps}>
+    {props.configList.map(config => renderItem(config, props.form))}
   </el-form>
 }

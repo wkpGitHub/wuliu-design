@@ -9,8 +9,8 @@ export default {
       {
         isGroup: true,
         children: [
-          { label: '物流渠道', prop: 'qd', required: true },
-          { label: '物流商', prop: 'qd', required: true },
+          { label: '物流渠道', prop: 'consigneeName', required: true },
+          { label: '物流商', prop: 'consigneeEmail', required: true },
         ],
         render({ genChildren }) {
           return <FormCard header="基本信息" style="grid-column: span 4" class="mb-4">
@@ -46,8 +46,36 @@ export default {
         }
       }
     ]
-    const { renderForm, formRef, formState } = useForm({ fieldList: fieldList, labelWidth: 80, span: 4, form: { rb: [{}, {}] } })
-    return () => <PageHandler>
+    const { renderForm, formRef, formState } = useForm({ configList: fieldList, labelWidth: 80, span: 4 }, {rb: [{}, {}]})
+
+    function setErrorMessage(config) {
+      if (config.prop === 'consigneeName') {
+        config.formItem = {
+          'error': '收件人名字必填!',
+
+        }
+      }
+    } 
+    setTimeout(() => {
+      formState.configList.forEach(config => {
+        if (config.isGroup) {
+          config.children.forEach(c => setErrorMessage(c))
+        } else {
+          setErrorMessage(config)
+        }
+      })
+    }, 2000)
+
+
+    async function confirm() {
+      await formRef.value.validate()
+      await new Promise((r) => {
+        setTimeout(() => {
+          r()
+        }, 2000);
+      })
+    }
+    return () => <PageHandler onConfirm={confirm}>
       <div class="ma-4">
         {renderForm()}
       </div>

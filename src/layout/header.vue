@@ -16,10 +16,14 @@ export default {
       ]
     }
 
-    const setFormFieldList = [
-      { label: '弹窗风格', prop: 'dialog-theme', type: 'select', options: [{label: '弹窗', value: 'dialog'}, {label: '抽屉', value: 'drawer'}]},
-      { label: '默认分页条数', prop: 'pageSize', type: 'select', options: [10,20,50,100].map(value => ({label: `${value}条/页`, value})) }
-    ]
+    const setFormConfig = {
+      grid: 1,
+      labelWidth: 90,
+      configList: [
+        { label: '弹窗风格', prop: 'dialog-theme', type: 'select', options: [{label: '弹窗', value: 'dialog'}, {label: '抽屉', value: 'drawer'}]},
+        { label: '默认分页条数', prop: 'pageSize', type: 'select', options: [10,20,50,100].map(value => ({label: `${value}条/页`, value})) }
+      ]
+    }
 
     const state = reactive({
       setDialog: {
@@ -114,7 +118,7 @@ export default {
           }
         }}</el-dropdown>
 
-        <DialogForm v-model={setDialog.isShow} fieldList={setFormFieldList} form={setDialog.form} title="偏好设置" width={300} span={1} labelWidth={90} onConfirm={saveSetDialog} />
+        <DialogForm v-model={setDialog.isShow} formConfig={setFormConfig} form={setDialog.form} title="偏好设置" width={300} onConfirm={saveSetDialog} />
 
         {contextmenu.isShow && <ul class="contextmenu" style={{ left: `${contextmenu.x}px`, top: `${contextmenu.y}px` }}>
           <li>刷新当前页面</li>

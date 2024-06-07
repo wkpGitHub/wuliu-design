@@ -11,25 +11,31 @@ import {auth} from '@/request'
 export default {
     name: 'page-list',
     props: {
-        tableColumns: {
-            type: Array,
-            default: () => []
+        tableConfig: {
+            type: Object,
+            default: () => ({
+                columns: [],
+                withHandler: true,
+                handlerWidth: 90
+            })
         },
-        searchFieldList: {
-            type: Array,
-            default: () => []
+        searchConfig: {
+            type: Object,
+            default: () => ({
+                labelWidth: 75,
+                configList: [],
+                onSearch: () => {},
+                onReset: () => {}
+            })
         },
-        formFieldList: {
-            type: Array,
-            default: () => []
-        },
-        withTableHandler: {
-            type: Boolean,
-            default: true
-        },
-        tableHandlerWidth: {
-            type: Number,
-            default: 90
+
+        formConfig: {
+            type: Object,
+            default: () => ({
+                configList: [],
+                labelWidth: 75,
+                grid: 2
+            })
         },
         api: {}
     },
@@ -41,12 +47,10 @@ export default {
         })
 
         const { renderTable, tableState } = useTable({
-            columns: props.tableColumns,
-            withTableHandler: props.withTableHandler,
-            tableHandlerSlot: slots.tableHandler,
-            tableHandlerWidth: props.tableHandlerWidth,
+            handlerSlot: slots.tableHandler,
             editRow,
-            deleteRow
+            deleteRow,
+            ...props.tableConfig,
         })
 
         function editRow(row, $index) {
@@ -69,9 +73,8 @@ export default {
         })
 
         const { renderSearch, searchState } = useSearch({
-            labelWidth: 75,
-            fieldList: props.searchFieldList,
-            onSearch: search
+            onSearch: search,
+            ...props.searchConfig
         })
 
         function sizeChange(pageSize) {
@@ -128,7 +131,7 @@ export default {
 
             {renderTable()}
             {renderPagination()}
-            <DialogForm v-model={state.isShowModal} title={state.modalTitle} fieldList={props.formFieldList} form={state.currentRow} onConfirm={save} />
+            <DialogForm v-model={state.isShowModal} title={state.modalTitle} formConfig={props.formConfig} form={state.currentRow} onConfirm={save} />
             {slots.default?.()}
         </div>
     }

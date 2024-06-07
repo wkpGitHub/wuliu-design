@@ -58,7 +58,7 @@ div.el-table .el-table__cell {
 .remove-border-table .el-table__header .cell{
   border-right: var(--border);
 }
-.remove-border-table .el-table__header .table-checkbox-cell .cell{
+.el-table .no-border-cell .cell{
   border-right: 0;
   text-overflow: clip;
 }
@@ -100,6 +100,9 @@ div.el-select__wrapper {
 div.el-input__wrapper:hover,
 div.el-select__wrapper:hover {
   border-color: #888C94;
+}
+.el-form-item.is-error .el-input__wrapper, .el-form-item.is-error .el-input__wrapper:hover, .el-form-item.is-error .el-input__wrapper:focus, .el-form-item.is-error .el-input__wrapper.is-focus, .el-form-item.is-error .el-textarea__inner, .el-form-item.is-error .el-textarea__inner:hover, .el-form-item.is-error .el-textarea__inner:focus, .el-form-item.is-error .el-textarea__inner.is-focus, .el-form-item.is-error .el-select__wrapper, .el-form-item.is-error .el-select__wrapper:hover, .el-form-item.is-error .el-select__wrapper:focus, .el-form-item.is-error .el-select__wrapper.is-focus{
+  border-color: var(--el-color-danger);
 }
 
 div.el-input__wrapper.is-focus,

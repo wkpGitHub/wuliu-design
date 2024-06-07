@@ -1,36 +1,46 @@
-<template>
-  <div class="page__handler">
-    <main>
-      <slot></slot>
-    </main>
-    <div class="page__footer">
-      <slot name="footer" :save="save">
-        <el-button @click="cancel">取消</el-button>
-        <el-button :loading="loading" type="primary" @click="save">保存</el-button>
-      </slot>
-    </div>
-  </div>
-</template>
+<script lang="jsx">
+import {reactive} from 'vue'
 
-<script>
 export default {
-  data() {
-    return {
-      loading: false
-    }
+  props: {
+    onConfirm: Function
   },
 
-  methods: {
-    save() {
-      this.loading = true
-      this.$emit('save', () => {
-        this.loading = false
-      })
-    },
+  setup(props, {slots, emit}) {
 
-    cancel() {
-      this.$emit('cancel')
+    const state = reactive({
+      loading: false
+    })
+
+    function close() {
+      emit('close')
     }
+
+    function confirm() {
+      state.loading = true
+      props.onConfirm().then(() => {
+        close()
+        state.loading = false
+      }).catch(() => {
+        state.loading = false
+      })
+    }
+
+    function footerSlot() {
+      if (slots.footer) {
+        return slots.footer({confirm, loading: state.loading, close})
+      } else {
+        return <>
+          <el-button onClick={close}>返回</el-button>
+          <el-button type="primary" loading={state.loading} onClick={confirm}>保存</el-button>
+        </>
+      }
+    }
+
+    return () => <div class="page__handler">
+      <main>{slots.default()}</main>
+      <div class="page__footer">{footerSlot()}</div>
+    </div>
   }
 }
 </script>

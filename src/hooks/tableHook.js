@@ -1,16 +1,16 @@
 import { reactive, computed, ref } from 'vue'
 import { genTableColumn } from './render'
-export function useTable({ columns, withTableHandler, tableHandlerSlot, tableHandlerWidth, editRow, deleteRow }) {
+export function useTable({ columns, withHandler=true, handlerSlot, handlerWidth=90, editRow, deleteRow }) {
   const state = reactive({
     data: [],
     columns
   })
 
-  if (withTableHandler) {
+  if (withHandler) {
     columns.push({
-      label: '操作', type: 'handler', fixed: 'right', width: tableHandlerWidth, slots: {
+      label: '操作', type: 'handler', fixed: 'right', width: handlerWidth, slots: {
         default({ row, $index }) {
-          return tableHandlerSlot ? tableHandlerSlot({editRow, deleteRow, row, $index}) : <>
+          return handlerSlot ? handlerSlot({editRow, deleteRow, row, $index}) : <>
             <ElButton link type="primary" onClick={() => editRow(row, $index)}>编辑</ElButton>
             <ElButton link type="danger" onClick={() => deleteRow(row, $index)}>删除</ElButton>
           </>

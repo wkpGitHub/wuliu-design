@@ -1,33 +1,14 @@
-import { reactive, watch, withModifiers, onUnmounted } from "vue";
+import { reactive, withModifiers, onUnmounted } from "vue";
 import { genField, popperOptions } from "./render";
 import { ElButton } from "element-plus";
-import {setDependOn} from './utils'
+import {setDependOn, getDefaultValues} from './utils'
 
-export function useSearch({ fieldList, onSearch, onReset }) {
-  function setValue(total, current) {
-    if (current.value) {
-      if (Array.isArray(current.value)) {
-        current.value.forEach((v, index) => {
-          total[current.prop[index]] = v
-        })
-      } else {
-        total[current.prop] = current.value
-      }
-    }
-  }
-  const defaultVals = fieldList.reduce((total, current) => {
-    if (current.isGroup) {
-      current.children.forEach(c => setValue(total, c))
-    } else if (current.isMore) {
-      current.children.forEach(c => setValue(total, c))
-    } else {
-      setValue(total, current)
-    }
-    return total
-  }, {})
+export function useSearch({ configList, onSearch, onReset }) {
+  const defaultValues = getDefaultValues(configList)
 
   const state = reactive({
-    form: { ...defaultVals },
+    form: { ...defaultValues },
+    configList,
     showMore: false,
     tags: []
   })
@@ -141,15 +122,15 @@ export function useSearch({ fieldList, onSearch, onReset }) {
       }
     })
   }
-  setTagMap(fieldList)
+  setTagMap(configList)
 
 
-  setDependOn(fieldList, state.form)
+  setDependOn(configList, state.form)
 
   function reset() {
-    state.form = { ...defaultVals }
+    state.form = { ...defaultValues }
     search()
-    onReset()
+    onReset?.()
   }
 
   function setSearchItemStyle(item, notLabelWidth) {
@@ -186,13 +167,13 @@ export function useSearch({ fieldList, onSearch, onReset }) {
   })
 
   function genMoreSearch(item) {
-    const {children, cols=1} = item
+    const {children, grid=1} = item
  
     return <el-popover trigger="click" visible={state.showMore} show-arrow={false} popper-class="page__search-filter-popover" popper-options={popperOptions}>{{
       reference: () => <ElButton class="square-btn" onClick={withModifiers(() => state.showMore = true, ['stop'])}><i class="iconfont icon-filter-records"></i></ElButton>,
-      default: () => <div class={`popover-body cols-${cols}`} onClick={withModifiers(() => {}, ['stop'])}>
+      default: () => <div class={`popover-body cols-${grid}`} onClick={withModifiers(() => {}, ['stop'])}>
         <el-scrollbar max-height="380">
-          <div class="filter-popover" style={{'grid-template-columns': `repeat(${cols}, 1fr)`}}>
+          <div class="filter-popover" style={{'grid-template-columns': `repeat(${grid}, 1fr)`}}>
             {children.map(c => <div style={{gridColumn: `span ${c.span || 1}`}}>
               <label>{c.label}</label>
               {genSearchItem(c, true)}
@@ -245,7 +226,7 @@ export function useSearch({ fieldList, onSearch, onReset }) {
   function renderSearch() {
     return <div class="page__search">
         <div class="page__search-content">
-          {fieldList.map(item => genSearchItem(item))}
+          {configList.map(config => genSearchItem(config))}
           <div class="page__search-btns">
             <ElButton type="primary" onClick={search}>查询</ElButton>
             <ElButton onClick={reset}>重置</ElButton>

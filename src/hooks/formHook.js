@@ -1,30 +1,22 @@
 import { reactive, ref, watch } from "vue";
 import { renderItem } from "./render";
-export function useForm(props) {
-  const {form, fieldList, labelWidth=60, labelPosition, inline, span=2} = props
-  const defaultVals = fieldList.reduce((total, current) => {
-    if (current.value) {
-      total[current.prop] = current.value
-    }
-    return total
-  }, {})
+import {setDependOn, getDefaultValues} from './utils'
+
+export function useForm(config, form) {
+  const {configList, labelWidth=60, grid=2, ...formProps} = config
+  const defaultValues = getDefaultValues(configList)
 
   const state = reactive({
-    form: { ...defaultVals, ...form },
-    fieldList
+    form: { ...defaultValues, ...form },
+    configList
   })
   const formRef = ref()
-  watch(() => props.form, v => state.form = { ...defaultVals, ...v })
 
-  fieldList.forEach(filed => {
-    if (filed.onChange) {
-      watch(() => state.form[filed.prop], v => filed.onChange(v, state.form, state.fieldList))
-    }
-  })
+  setDependOn(configList, state.form)
 
   function renderForm () {
-    return <el-form style={{display: 'grid', 'grid-template-columns': `repeat(${span}, 1fr)`}} class="lj-form" ref={formRef} model={state.form} label-width={labelWidth} label-position={labelPosition} inline={inline}>
-      {state.fieldList.map(item => renderItem(item, state.form))}
+    return <el-form style={{display: 'grid', 'grid-template-columns': `repeat(${grid}, 1fr)`}} class="lj-form" ref={formRef} model={state.form} label-width={labelWidth} {...formProps}>
+      {state.configList.map(config => renderItem(config, state.form))}
     </el-form>
   }
 

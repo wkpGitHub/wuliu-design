@@ -5,9 +5,13 @@ import CDialog from '@/components/c-dialog'
 
 export default {
   props: {
-    fieldList: {
-      type: Array,
-      default: () => []
+    formConfig: {
+      type: Object,
+      default: () => ({
+        configList: [],
+        labelWidth: 75,
+        grid: 2
+      })
     },
     form: {
       type: Object,
@@ -17,12 +21,13 @@ export default {
       type: Boolean,
       default: false
     },
-    onConfirm: Function,
-    span: Number,
-    labelWidth: Number
+    onConfirm: Function
   },
   setup(props, {attrs, slots}) {
-    const {renderForm, formRef, formState} = useForm(props)
+    const {renderForm, formRef, formState} = useForm(props.formConfig, props.form)
+    watch(() => props.form, v => {
+      formState.form = {...v}
+    })
 
     async function confirm() {
       await formRef.value.validate()

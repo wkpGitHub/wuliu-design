@@ -1,5 +1,5 @@
 <script lang="jsx">
-import {reactive} from 'vue'
+import {reactive, watch} from 'vue'
 import {popperOptions} from '../render'
 
 export default {
@@ -20,7 +20,14 @@ export default {
       emit(`update:${key}`, v)
     }
 
-    const valueMemoMap = {}
+    let valueMemoMap = {}
+    watch(() => props.list, v => {
+      valueMemoMap = (v || []).reduce((total, current) => {
+        total[current.search_field] = current.search_value
+        return total
+      }, {})
+      onChange(props.field)
+    })
 
     const valueToLabelMap = props.options.reduce((total, current) => {
       total[current.value] = current.label
