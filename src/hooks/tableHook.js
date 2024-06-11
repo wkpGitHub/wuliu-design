@@ -1,8 +1,8 @@
 import { reactive, computed, ref } from 'vue'
 import { genTableColumn } from './render'
-export function useTable({ columns, withHandler=true, handlerSlot, handlerWidth=90, editRow, deleteRow }) {
+export function useTable({ columns, withHandler=true, handlerSlot, handlerWidth=90, editRow, deleteRow }, data = []) {
   const state = reactive({
-    data: [],
+    data,
     columns
   })
 

@@ -3,11 +3,11 @@ import { genField, popperOptions } from "./render";
 import { ElButton } from "element-plus";
 import {setDependOn, getDefaultValues} from './utils'
 
-export function useSearch({ configList, onSearch, onReset }) {
+export function useSearch({ configList, onSearch, onReset }, form = {}) {
   const defaultValues = getDefaultValues(configList)
 
   const state = reactive({
-    form: { ...defaultValues },
+    form: { ...defaultValues, ...form },
     configList,
     showMore: false,
     tags: []

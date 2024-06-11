@@ -39,18 +39,18 @@ export function genTable(config, data) {
   }
   const {columns, prop, ...otherProps} = config || {}
   return <ElTable {...otherProps} key={prop} border data={data}>
-    {columns.map(col => genTableColumn({col, changeCheckStatus, checkedAll, indeterminate}))}
+    {columns.map(col => genTableColumn({col, changeCheckStatus, checkedAll, indeterminate, parentKey}))}
   </ElTable>
 }
 
-export function genTableColumn({col, changeCheckStatus, checkedAll, indeterminate}) {
+export function genTableColumn({col, changeCheckStatus, checkedAll, indeterminate, parentKey}) {
   // 隐藏列
   if (col.hidden) return null
   let {slots, ...otherProps} = col
   if (col.writeable) {
     slots = Object.assign({}, {
       default: ({row}) => {
-        return genField(col, row)
+        return genFormItem(col, row)
       }
     }, slots)
   }
@@ -83,19 +83,19 @@ export function genField(config, form) {
     return config.render(config, form)
   }
 
-  const {type, label, defaultValue, formItem, slots, prop, watch, dependOns, changeEffect, clearable=true, options, ...otherProps} = config
+  const {type, label, defaultValue, formItem, slots, prop, watch, dependOns, changeEffect, options, ...otherProps} = config
 
   // 这个后续要做成一个映射表
   switch (type) {
     case 'select':
       // TODO：多个值,既需要value，又需要label
-      return <ElSelect key={prop} v-model={form[prop]} collapse-tags popper-options={popperOptions} {...otherProps}>
+      return <ElSelect key={prop} v-model={form[prop]} collapse-tags popper-options={popperOptions} clearable {...otherProps}>
         {options.map(opt => <ElOption label={opt.label} value={opt.value} key={opt.value} />)}
       </ElSelect>
     case 'table':
       return genTable(config, form[prop] || [])
     case 'date':
-      return  <el-date-picker type={config.dateType} key={prop} v-model={form[prop]} popper-options={popperOptions} {...otherProps} />
+      return  <el-date-picker type={config.dateType} key={prop} v-model={form[prop]} popper-options={popperOptions} clearable {...otherProps} />
     case 'radio':
       return <el-radio-group v-model={form[prop]}>
         {options.map(o => {
@@ -105,7 +105,7 @@ export function genField(config, form) {
     case 'combo': 
       return <ComboGroup v-model:field={form[prop[0]]} v-model:value={form[prop[1]]} v-model:list={form[prop[2]]} key={prop[0]} options={options} {...otherProps} />
     default:
-      return <ElInput key={prop} v-model={form[prop]} {...otherProps}>{slots}</ElInput>
+      return <ElInput key={prop} v-model={form[prop]} clearable {...otherProps}>{slots}</ElInput>
   }
 }
 
@@ -117,13 +117,19 @@ function getFormItemStyle(config) {
 }
 
 export function genFormItem(config, form) {
+  if (config.hidden) return null
+
   let {rules = [], formItem} = config
   if (config.required) {
     rules.unshift({required: true, message: `${config.label}不能为空！`})
   }
-  return <el-form-item style={getFormItemStyle(config)} label={config.label} prop={config.prop} required={config.required} rules={rules} {...formItem}>
-    {genField(config, form)}
-  </el-form-item>
+  const {slots={}, ...formProps} = formItem || {}
+  Object.assign(slots, {
+    // error: ({error}) => <el-tooltip content={error}><i class="el-form-item__error iconfont icon-info"></i></el-tooltip>,
+    default: () => genField(config, form)
+  })
+
+  return <el-form-item style={getFormItemStyle(config)} label={config.label} prop={config.prop} required={config.required} rules={rules} {...formProps}>{slots}</el-form-item>
 }
 
 export function renderItem(config, form) {
