@@ -1,12 +1,14 @@
 <script lang="jsx">
 import SideBar from './sideBar'
 import Header from './header'
+import HistoryList from './history-list'
 export default {
   setup() {
     return () => <div class="layout__container">
-      <SideBar />
+      {/* <SideBar /> */}
       <div class="layout__content">
         <Header />
+        <HistoryList />
         <div class="layout__main">
           <RouterView />
         </div>
@@ -31,7 +33,7 @@ export default {
   }
 
   &main {
-    height: calc(100% - 38px);
+    height: calc(100% - 70px);
     background: var(--bg-color);
   }
 }

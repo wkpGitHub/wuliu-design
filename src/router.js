@@ -1,28 +1,31 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import List from './views/list'
 import Edit from './views/edit'
 import Layout from '@/layout'
 
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory('/b/'),
   routes: [
     {
       path: '/',
       component: Layout,
-      redirect: '/list',
-      children: [
-        {
-          name: 'list',
-          path: 'list',
-          component: List
-        },
-        {
-          name: 'edit',
-          path: 'edit',
-          component: Edit
-        }
-      ]
+      name: 'layout'
     }
   ]
 })
+const loadMenu = []
+router.beforeEach((to, from, next) => {
+  if (loadMenu.includes(to.path)) {
+    next()
+  } else {
+    router.addRoute('layout', {
+      path: to.path,
+      component: List
+    })
+    loadMenu.push(to.path)
+    next({ ...to })
+  }
+})
+
+export default router

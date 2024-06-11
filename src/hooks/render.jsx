@@ -39,7 +39,7 @@ export function genTable(config, data) {
   }
   const {columns, prop, ...otherProps} = config || {}
   return <ElTable {...otherProps} key={prop} border data={data}>
-    {columns.map(col => genTableColumn({col, changeCheckStatus, checkedAll, indeterminate, parentKey}))}
+    {columns.map(col => genTableColumn({col, changeCheckStatus, checkedAll, indeterminate, parentKey: prop}))}
   </ElTable>
 }
 
