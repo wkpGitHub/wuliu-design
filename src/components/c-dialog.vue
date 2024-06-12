@@ -14,7 +14,11 @@ export default {
       type: [String, Number],
       default: '680px'
     },
-    onConfirm: Function
+    onConfirm: Function,
+    showFooter: {
+      type: Boolean,
+      default: true
+    }
   },
   setup(props, { attrs, slots, emit }) {
     const state = reactive({
@@ -51,6 +55,7 @@ export default {
       }
     }
     function footerSlot() {
+      if (!props.showFooter) return null
       if (slots.footer) {
         return slots.footer({confirm, loading: state.loading, close})
       } else {
@@ -95,10 +100,11 @@ export default {
   &__close {
     cursor: pointer;
     color: #A6ABB4;
-    font-size: 24px;
+    font-size: 20px;
     border-radius: 2px;
     width: 24px;
     height: 24px;
+    line-height: 24px;
 
     &:hover {
       background-color: #F0F2F5;

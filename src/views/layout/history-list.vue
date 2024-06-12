@@ -5,7 +5,7 @@ import { useRouter, useRoute } from 'vue-router'
 export default {
   setup() {
     const state = reactive({
-      tabs: [{path: '/首页', isLock: true}],
+      tabs: [{name: '首页', path: '/detail', isLock: true}],
       contextmenu: {
         isShow: false,
         x: 0,
@@ -94,7 +94,7 @@ export default {
       const { contextmenu, tabs } = state
       return <div class="slick-list">
         {tabs.map((tab, index) => <div class={{'slick-item': true, 'slick-item-active': tab.active}} onContextmenu={e => onContextmenu(e, tab, index)}>
-          <span class={{tag: true, 'is-home': index === 0}} onClick={() => router.push(tab.path)}> {tab.path} </span>
+          <span class={{tag: true, 'is-home': index === 0}} onClick={() => router.push(tab.path)}> {tab.name} </span>
           {genTabIcon(tab, index)}
         </div>)}
         {contextmenu.isShow && <ul class="contextmenu" style={{ left: `${contextmenu.x}px`, top: `${contextmenu.y}px` }}>
@@ -118,6 +118,7 @@ export default {
   z-index: 9;
   height: 32px;
   padding: 0 12px;
+  margin-bottom: 8px;
 
   .slick-item {
     position: relative;
@@ -156,15 +157,12 @@ export default {
       border-radius: 50%;
       width: 18px;
       height: 18px;
-      display: inline-block;
-      line-height: 18px;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       &:hover{
         background: #e3e4e8;
       }
-    }
-    .icon-pin-lock{
-      font-size: 12px;
     }
 
     &:not(.slick-item-active) {
@@ -191,18 +189,14 @@ export default {
     &.slick-item-active {
       background-color: var(--bg-color);
       color: var(--el-color-primary);
-      border
-      .close-btn {
-        &:hover {
-          background: #f0f2f5;
-        }
-      }
+      border: var(--border);
+      border-bottom: 0;
     }
 
     &:hover {
       color: var(--el-color-primary);
       .close-btn {
-        display: block;
+        display: flex;
       }
     }
 

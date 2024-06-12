@@ -14,7 +14,7 @@ export default {
         ],
         render({ genChildren }) {
           return <FormCard header="基本信息" style="grid-column: span 4" class="mb-4">
-            <div class="grid-columns-4">{genChildren()}</div>
+            <div class="grid-4">{genChildren()}</div>
           </FormCard>
         }
       },
@@ -41,7 +41,7 @@ export default {
         ],
         render({ genChildren }) {
           return <FormCard header="运费规则" style="grid-column: span 4" class="mb-4">
-            <div class="grid-columns-4">{genChildren()}</div>
+            <div class="grid-4">{genChildren()}</div>
           </FormCard>
         }
       }

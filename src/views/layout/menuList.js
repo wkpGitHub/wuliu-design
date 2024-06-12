@@ -1,14 +1,14 @@
 export default [
   {
-    title: '基础信息',
+    name: '基础信息',
     path: '/baseData',
     children: [
       {
-        title: '服务商',
+        name: '服务商',
         path: 'serviceProvider',
         children: [
           {
-            title: '服务商信息',
+            name: '服务商信息',
             path: 'supplyInfo',
             meta: {
               functionList: {
@@ -20,78 +20,78 @@ export default [
             },
           },
           {
-            title: '服务商API',
+            name: '服务商API',
             path: 'numApply',
           },
           {
-            title: '服务商模板导出',
+            name: '服务商模板导出',
             path: 'supplierCredential',
           },
 
         ]
       },
       {
-        title: '渠道管理',
+        name: '渠道管理',
         path: 'cEmsKind',
         children: [
           {
-            title: '渠道列表',
+            name: '渠道列表',
             path: 'channel',
           },
           {
-            title: '送达区域',
+            name: '送达区域',
             path: 'setDeliveryArea',
           },
           {
-            title: '城市邮编',
+            name: '城市邮编',
             path: 'setDeliveryCityZip',
           },
           {
-            title: '偏远类别',
+            name: '偏远类别',
             path: 'setDeliveryAreaRemote',
           },
           {
-            title: '偏远禁运',
+            name: '偏远禁运',
             path: 'setRemoteProhibit',
             meta: {
               functionList: { 'setRemoteProhibit:exportGroup': '导出偏远禁运组' }
             }
           },
           {
-            title: '参数规则',
+            name: '参数规则',
             path: 'validateRules',
           },
           {
-            title: '客户渠道白名单',
+            name: '客户渠道白名单',
             path: 'customerWhiteList',
           },
           {
-            title: '预录配额',
+            name: '预录配额',
             path: 'preOrderQuota',
           },
           {
-            title: '供应商渠道货量控制',
+            name: '供应商渠道货量控制',
             path: 'supplierChannelVolumeControl',
           },
           {
-            title: '渠道别名',
+            name: '渠道别名',
             path: 'channelAlias',
           },
         ]
       },
       {
-        title: '路由配置',
+        name: '路由配置',
         path: 'routerConfig',
         children: [
           {
-            title: '预录单路由前置校验',
+            name: '预录单路由前置校验',
             path: 'preOrderRouterValidate',
             meta: {
               isNew: true,
             }
           },
           {
-            title: '预录单路由',
+            name: '预录单路由',
             path: 'preOrderRouter',
             meta: {
               functionList: {
@@ -106,7 +106,7 @@ export default [
             }
           },
           {
-            title: '预录单定制路由',
+            name: '预录单定制路由',
             path: 'customRoutePreOrder',
             meta: {
               functionList: {
@@ -119,7 +119,7 @@ export default [
             }
           },
           {
-            title: '分拣路由',
+            name: '分拣路由',
             path: 'forwardRouter',
             meta: {
               functionList: {
@@ -134,14 +134,14 @@ export default [
             }
           },
           {
-            title: '分拣中心分拣路由',
+            name: '分拣中心分拣路由',
             path: 'sortForwardRouter',
             meta: {
               isNew: true,
             }
           },
           {
-            title: '分拣定制路由',
+            name: '分拣定制路由',
             path: 'customRouteForward',
             meta: {
               functionList: {
@@ -154,7 +154,7 @@ export default [
             }
           },
           {
-            title: '快手转单前提',
+            name: '快手转单前提',
             path: 'shouldRelabel',
             meta: {
               functionList: {
@@ -169,167 +169,167 @@ export default [
         ]
       },
       {
-        title: '成本管理',
+        name: '成本管理',
         path: 'costManage',
         children: [
           {
-            title: '基础成本',
+            name: '基础成本',
             path: 'setPriceCost',
           },
           {
-            title: '定制地点成本',
+            name: '定制地点成本',
             path: 'customizedCost',
           },
           {
-            title: '定制分区成本',
+            name: '定制分区成本',
             path: 'customizedAreaCost',
           },
           {
-            title: '头程运输成本',
+            name: '头程运输成本',
             path: 'headFreightCost',
           },
           {
-            title: '定制地点头程运输成本',
+            name: '定制地点头程运输成本',
             path: 'customizedHeadFreightCost',
           },
           {
-            title: '定制分区头程运输成本',
+            name: '定制分区头程运输成本',
             path: 'customizedAreaHeadFreightCost',
           },
           {
-            title: '清关成本',
+            name: '清关成本',
             path: 'customsClearanceCost',
           },
           {
-            title: '定制地点清关成本',
+            name: '定制地点清关成本',
             path: 'customizedClearanceCost',
           },
           {
-            title: '定制分区清关成本',
+            name: '定制分区清关成本',
             path: 'customizedAreaClearanceCost',
           },
           {
-            title: '成本查询',
+            name: '成本查询',
             path: 'cost',
           },
         ]
       },
       {
-        title: '成本测算',
+        name: '成本测算',
         path: 'costEstimates',
         children: [
           {
-            title: '综合成本测算',
+            name: '综合成本测算',
             path: 'costBudget',
           },
           {
-            title: '成本配置',
+            name: '成本配置',
             path: 'costConfig',
           },
           {
-            title: '费用名称',
+            name: '费用名称',
             path: 'costName',
           },
           {
-            title: '预估方案配置',
+            name: '预估方案配置',
             path: 'estimateConfig',
           },
         ]
       },
       {
-        title: '重量规则',
+        name: '重量规则',
         path: 'weightRule',
         children: [
           {
-            title: '计泡规则',
+            name: '计泡规则',
             path: 'volumeWeightRule',
           },
           {
-            title: '定制计泡规则',
+            name: '定制计泡规则',
             path: 'privateVolumeWeightRule',
           },
           {
-            title: '计泡规则查询',
+            name: '计泡规则查询',
             path: 'volumeWeightRuleDetail',
           },
           {
-            title: '试算计费重',
+            name: '试算计费重',
             path: 'calcChargeWeight',
           },
           {
-            title: '计泡处理规则',
+            name: '计泡处理规则',
             path: 'volumeWeightRuleProcess',
           },
           {
-            title: '定制计泡处理规则',
+            name: '定制计泡处理规则',
             path: 'privateVolumeWeightRuleCustom',
           },
         ]
       },
       {
-        title: '报价管理',
+        name: '报价管理',
         path: 'offerManage',
         children: [
           {
-            title: '基础报价',
+            name: '基础报价',
             path: 'setPrice',
           },
           {
-            title: '站点报价',
+            name: '站点报价',
             path: 'sitePrice',
           },
           {
-            title: '特殊报价',
+            name: '特殊报价',
             path: 'specialPrice',
           },
           {
-            title: '定制地点报价',
+            name: '定制地点报价',
             path: 'customizedPrice',
           },
           {
-            title: '定制分区报价',
+            name: '定制分区报价',
             path: 'customizedAreaPrice',
           },
           {
-            title: '计费组地点报价',
+            name: '计费组地点报价',
             path: 'chargingGroupPrice',
           },
           {
-            title: '计费组分区报价',
+            name: '计费组分区报价',
             path: 'chargingGroupAreaPrice',
           },
           {
-            title: '折扣管理',
+            name: '折扣管理',
             path: 'discountManagement',
           },
           {
-            title: '报价查询',
+            name: '报价查询',
             path: 'price',
             meta: {
               functionList: { 'price:updateQuote': '更新报价' }
             }
           },
           {
-            title: '报价模拟',
+            name: '报价模拟',
             path: 'simulateQuotation',
           },
           {
-            title: '报价模拟成本配置',
+            name: '报价模拟成本配置',
             path: 'costComparisonConfig',
           },
           {
-            title: '同行报价配置',
+            name: '同行报价配置',
             path: 'peerQuotationConfig',
           },
           {
-            title: '销售预报',
+            name: '销售预报',
             path: 'salesForecast',
             meta: {
               // isShow: true
             }
           },
           {
-            title: '销售预报明细',
+            name: '销售预报明细',
             path: 'salesForecastDetail',
             meta: {
               // isShow: true
@@ -338,29 +338,29 @@ export default [
         ]
       },
       {
-        title: '号码管理',
+        name: '号码管理',
         path: 'numberManage',
         children: [
           {
-            title: '号码区间',
+            name: '号码区间',
             path: 'numIntervalRule',
             meta: {
               functionList: { 'numIntervalRule:export': '导出' }
             }
           },
           {
-            title: '号码池',
+            name: '号码池',
             path: 'numPool',
             meta: {
               functionList: { 'numPool:export': '导出' }
             }
           },
           {
-            title: '号码分组',
+            name: '号码分组',
             path: 'numGroup',
           },
           {
-            title: '袋号规则',
+            name: '袋号规则',
             path: 'bagNoAirport',
             meta: {
               functionList: {
@@ -371,7 +371,7 @@ export default [
             }
           },
           {
-            title: '内部袋号规则',
+            name: '内部袋号规则',
             path: 'bagNoAirportInner',
             meta: {
               functionList: {
@@ -381,35 +381,35 @@ export default [
             }
           },
           {
-            title: '单号截取规则',
+            name: '单号截取规则',
             path: 'cNoCutRule',
           },
         ]
       },
 
       {
-        title: '审批管理',
+        name: '审批管理',
         path: 'approvalManagement',
         meta: {
           // isShow: true
         },
         children: [
           {
-            title: '审批组',
+            name: '审批组',
             path: 'approvalGroupManagement',
             meta: {
               // isShow: true
             },
           },
           {
-            title: '审批规则',
+            name: '审批规则',
             path: 'approvalRule',
             meta: {
               // isShow: true
             },
           },
           {
-            title: '设置审批规则',
+            name: '设置审批规则',
             path: 'approvalRule/addApprovalRule',
             meta: {
               isShow: true,
@@ -417,21 +417,21 @@ export default [
             }
           },
           {
-            title: '全部审批单',
+            name: '全部审批单',
             path: 'allApprovals',
             meta: {
               // isShow: true
             },
           },
           {
-            title: '我收到的审批',
+            name: '我收到的审批',
             path: 'myApprovals',
             meta: {
               // isShow: true
             },
           },
           {
-            title: '抄送给我的审批',
+            name: '抄送给我的审批',
             path: 'notifierApprovals',
             meta: {
               // isShow: true
@@ -440,35 +440,35 @@ export default [
         ]
       },
       {
-        title: '其他',
+        name: '其他',
         path: 'baseOther',
         children: [
           {
-            title: '标签管理',
+            name: '标签管理',
             path: 'labelManage',
           },
           {
-            title: '客户特殊分组',
+            name: '客户特殊分组',
             path: 'customerGroup',
           },
           {
-            title: '合同管理',
+            name: '合同管理',
             path: 'contractManager',
           },
           {
-            title: '合同类型维护',
+            name: '合同类型维护',
             path: 'contractTypeManage',
           },
           {
-            title: 'PDA',
+            name: 'PDA',
             path: 'PDA',
           },
           {
-            title: '扫描事件',
+            name: '扫描事件',
             path: 'eventScanManage',
           },
           {
-            title: '扫描事件日志',
+            name: '扫描事件日志',
             path: 'eventScanLog',
             meta: {
               functionList: {
@@ -478,15 +478,15 @@ export default [
             }
           },
           {
-            title: '二级状态管理',
+            name: '二级状态管理',
             path: 'secondStatusManage',
           },
           {
-            title: '系统参数',
+            name: '系统参数',
             path: 'sysParams',
           },
           {
-            title: '扫描事件业务配置',
+            name: '扫描事件业务配置',
             path: 'eventScanBusinessConfig',
           },
         ]
@@ -495,27 +495,27 @@ export default [
   },
 
   {
-    title: '发货',
+    name: '发货',
     path: '/ship',
     children: [
       {
-        title: '代打包',
+        name: '代打包',
         path: 'insteadPacking',
         children: [
           {
-            title: '转发数据录入',
+            name: '转发数据录入',
             path: 'expressPackageDataRecord',
           },
           {
-            title: '转发快件打包',
+            name: '转发快件打包',
             path: 'expressPackage',
           },
           {
-            title: '称重入库',
+            name: '称重入库',
             path: 'warehousing',
           },
           {
-            title: '打包打面单',
+            name: '打包打面单',
             path: 'packall',
             meta: {
               functionList: {
@@ -525,7 +525,7 @@ export default [
             },
           },
           {
-            title: '已打包列表',
+            name: '已打包列表',
             path: 'packlist',
             meta: {
               functionList: {
@@ -536,67 +536,67 @@ export default [
         ]
       },
       {
-        title: '内部装袋操作',
+        name: '内部装袋操作',
         path: 'insidebagOperate',
         children: [
           {
-            title: '内部装袋',
+            name: '内部装袋',
             path: 'insidebagging',
           },
           {
-            title: '内部装袋新',
+            name: '内部装袋新',
             path: 'insidebaggingNew',
           },
           {
-            title: '已装袋列表',
+            name: '已装袋列表',
             path: 'baglist',
           },
           {
-            title: '装卸扫描',
+            name: '装卸扫描',
             path: 'scanLoading',
           },
           {
-            title: '内部追踪搜索',
+            name: '内部追踪搜索',
             path: 'trackingSearch',
           },
           {
-            title: '批量打印',
+            name: '批量打印',
             path: 'bagnumpoint',
           },
         ]
       },
       {
-        title: '客户预装袋操作',
+        name: '客户预装袋操作',
         path: 'customerPreBagOperate',
         children: [
           {
-            title: '预报重量',
+            name: '预报重量',
             path: 'customerPreWeight',
           },
           {
-            title: '客户预装袋',
+            name: '客户预装袋',
             path: 'customerPreBagging',
           },
         ]
       },
       {
-        title: '干线运输',
+        name: '干线运输',
         path: 'trunkLine',
         children: [
           {
-            title: '分部转运总单',
+            name: '分部转运总单',
             path: 'branchTransportAWB',
           },
           {
-            title: '转运管理',
+            name: '转运管理',
             path: 'transportManagement',
           },
           {
-            title: '线路管理',
+            name: '线路管理',
             path: 'lineManage',
           },
           {
-            title: '转运需求',
+            name: '转运需求',
             path: 'transferManage',
             meta: {
               functionList: {
@@ -606,7 +606,7 @@ export default [
             },
           },
           {
-            title: '转运总单',
+            name: '转运总单',
             path: 'transferMawb',
             meta: {
               functionList: {
@@ -617,7 +617,7 @@ export default [
             },
           },
           {
-            title: '运输任务',
+            name: '运输任务',
             path: 'transferRecord',
             meta: {
               functionList: {
@@ -634,48 +634,48 @@ export default [
     ]
   },
   {
-    title: '追踪',
+    name: '追踪',
     path: '/trackManager',
     children: [
       {
-        title: '定时追踪',
+        name: '定时追踪',
         path: 'scheduledTrack',
         children: [
           {
-            title: '渠道追踪配置',
+            name: '渠道追踪配置',
             path: 'channelTrackConfig',
           },
           {
-            title: '异常追踪管理',
+            name: '异常追踪管理',
             path: 'anomalyTrackOrder',
             meta: {
               functionList: { 'anomalyTrackOrder:export': '导出' }
             }
           },
           {
-            title: '追踪关联标记管理',
+            name: '追踪关联标记管理',
             path: 'anomalyRelation',
           },
           {
-            title: '追踪标签管理',
+            name: '追踪标签管理',
             path: 'anomalyLabelManagement',
           },
           {
-            title: '任务日志',
+            name: '任务日志',
             path: 'scheduleLog',
           },
         ]
       },
       {
-        title: '追踪操作',
+        name: '追踪操作',
         path: 'trackOperate',
         children: [
           {
-            title: '追踪导入',
+            name: '追踪导入',
             path: 'trackInfoImport',
           },
           {
-            title: '总单追踪',
+            name: '总单追踪',
             path: 'AWBTrack',
             meta: {
               functionList: {
@@ -685,7 +685,7 @@ export default [
             }
           },
           {
-            title: 'API追踪',
+            name: 'API追踪',
             path: 'lastmileEvent',
             meta: {
               functionList: { 'eventManage': '事件管理' }
@@ -694,55 +694,55 @@ export default [
         ]
       },
       {
-        title: '追踪配置',
+        name: '追踪配置',
         path: 'trackConfig',
         children: [
 
           {
-            title: '事件管理',
+            name: '事件管理',
             path: 'eventManager',
           },
           {
-            title: '地点管理',
+            name: '地点管理',
             path: 'locationManager',
           },
           {
-            title: '客户追踪信息屏蔽',
+            name: '客户追踪信息屏蔽',
             path: 'informationShielding',
           },
 
           {
-            title: '追踪标准事件',
+            name: '追踪标准事件',
             path: 'event',
           },
           {
-            title: '轨迹标准化',
+            name: '轨迹标准化',
             path: 'eventMapping',
           },
           {
-            title: '事件未映射监控',
+            name: '事件未映射监控',
             path: 'notConfiguredTrackLog',
           },
           {
-            title: '追踪方式',
+            name: '追踪方式',
             path: 'trackCaller',
           },
           {
-            title: '事件参数',
+            name: '事件参数',
             path: 'sensitiveFields',
           },
           {
-            title: '追踪可见性权限配置',
+            name: '追踪可见性权限配置',
             path: 'trackVisableConfig',
           },
         ]
       },
       {
-        title: '快件跟踪',
+        name: '快件跟踪',
         path: 'expressTrack',
         children: [
           {
-            title: '快件追踪',
+            name: '快件追踪',
             path: 'expressTrackingNew',
             meta: {
               functionList: {
@@ -756,7 +756,7 @@ export default [
             },
           },
           {
-            title: '末端派送分析',
+            name: '末端派送分析',
             path: 'deliveryAnalysis',
           },
         ]

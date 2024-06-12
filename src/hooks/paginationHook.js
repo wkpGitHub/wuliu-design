@@ -7,7 +7,6 @@ export function usePagination({onCurrentChange, onSizeChange, pageSize}) {
     total: 400
   })
   watch(() => store.globalSetting, v => {
-    debugger
     onSizeChange(pageSize || v.pageSize)
   })
   

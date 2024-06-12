@@ -173,8 +173,8 @@ export function useSearch({ configList, onSearch, onReset }, form = {}) {
       reference: () => <ElButton class="square-btn" onClick={withModifiers(() => state.showMore = true, ['stop'])}><i class="iconfont icon-filter-records"></i></ElButton>,
       default: () => <div class={`popover-body cols-${grid}`} onClick={withModifiers(() => {}, ['stop'])}>
         <el-scrollbar max-height="380">
-          <div class="filter-popover" style={{'grid-template-columns': `repeat(${grid}, 1fr)`}}>
-            {children.map(c => <div style={{gridColumn: `span ${c.span || 1}`}}>
+          <div class={["filter-popover", `grid--${grid}`]}>
+            {children.map(c => <div class={`span--${c.span || 1}`}>
               <label>{c.label}</label>
               {genSearchItem(c, true)}
             </div>)}

@@ -1,19 +1,26 @@
 <script lang="jsx">
 import {reactive} from 'vue'
+import { useRouter } from 'vue-router';
 
 export default {
   props: {
-    onConfirm: Function
+    onConfirm: Function,
+    onClose: Function
   },
 
   setup(props, {slots, emit}) {
+    const router = useRouter()
 
     const state = reactive({
       loading: false
     })
 
     function close() {
-      emit('close')
+      if (props.onClose) {
+        props.onClose()
+      } else {
+        router.back()
+      }
     }
 
     function confirm() {

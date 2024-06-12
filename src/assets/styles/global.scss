@@ -109,13 +109,13 @@
       }
       
       .filter-popover{
-        padding: 16px 16px 20px;
+        padding: 12px;
         display: grid;
         gap: 16px;
         overflow-y: auto;
       }
       .footer-btn {
-        padding: 8px 16px;
+        padding: 8px 12px;
         display: flex;
         align-items: center;
         justify-content: flex-end;
@@ -142,12 +142,12 @@
     position: relative;
     background-color: #fff;
     border-radius: 4px 4px 0 0;
-    border: 1px solid #e6e8eb;
     border-bottom: 0;
     margin: 0 12px;
     flex: auto;
     overflow: hidden;
     .el-table, .el-table__inner-wrapper{
+      border-radius: inherit;
       height: 100%;
     }
   }
@@ -187,7 +187,8 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    border: 1px solid #e6e8eb;
+    border: var(--border);
+    border-top: 0;
     border-radius: 0 0 4px 4px;
     overflow: hidden;
     li.number{
@@ -253,25 +254,47 @@
   justify-content: center;
   align-items: center;
 }
-.grid-columns-2{
+.grid--1{
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+}
+.grid--2{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
-.grid-columns-3{
+.grid--3{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
-.grid-columns-4{
+.grid--4{
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
-.grid-columns-5{
+.grid--5{
   display: grid;
   grid-template-columns: repeat(5, 1fr);
 }
-.grid-columns-6{
+.grid--6{
   display: grid;
   grid-template-columns: repeat(6, 1fr);
+}
+.span--1{
+  grid-column: span 1;
+}
+.span--2{
+  grid-column: span 2;
+}
+.span--3{
+  grid-column: span 3;
+}
+.span--4{
+  grid-column: span 4;
+}
+.span--5{
+  grid-column: span 5;
+}
+.span--6{
+  grid-column: span 6;
 }
 .ma-{
   &0{
@@ -530,5 +553,24 @@
   }
   &4{
     padding-bottom: 16px !important;
+  }
+}
+.flex{
+  display: flex;
+  &--middle{
+    display: flex;
+    align-items: center;
+  }
+  &--center{
+    display: flex;
+    justify-content: center;
+  }
+  &--between{
+    display: flex;
+    justify-content: space-between;
+  }
+  &--end{
+    display: flex;
+    justify-content: flex-end;
   }
 }

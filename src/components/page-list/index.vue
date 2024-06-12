@@ -16,7 +16,7 @@ export default {
             default: () => ({
                 columns: [],
                 handlerSlot: () => {},
-                withHandler: true,
+                showHandler: true,
                 handlerWidth: 90
             })
         },
@@ -47,6 +47,7 @@ export default {
             isEdit: false,
             isShowModal: false,
             currentRow: {},
+            loading: false
         })
         // 已勾选记录
         const checkedList = computed(() => tableState.data?.filter(item => item._checked) || [])
@@ -131,9 +132,12 @@ export default {
         }
 
         function getTableData() {
+            state.loading = true
             auth.list({ pageSize: paginationState.pageSize }).then(data => {
                 tableState.data = data.data
                 paginationState.total = data.total
+            }).finally(() => {
+                state.loading = false
             })
             
         }
@@ -191,12 +195,12 @@ export default {
 
         getTableData()
 
-        return () => <div class="page-list">
+        return () => <div class="page-list" v-loading={state.loading}>
             {renderSearch()}
             {operateSlot()}
             {renderTable()}
             {renderPagination()}
-            <DialogForm v-model={state.isShowModal} title={state.modalTitle} formConfig={props.formConfig} form={state.currentRow} onConfirm={save} />
+            {state.isShowModal && <DialogForm v-model={state.isShowModal} title={state.modalTitle} formConfig={props.formConfig} form={state.currentRow} onConfirm={save} />}
             {slots.default?.()}
         </div>
     }

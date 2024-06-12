@@ -65,21 +65,20 @@ export default {
     }
 
     async function saveSetDialog({form}) {
-      debugger
       store.setGlobalSetting(form)
     }
 
     function genMenuItem(item) {
       return <el-popover v-model:visible={item.visible} show-arrow={false} popper-class="menu-download-popover" hide-after={0} placement="bottom-start" offset={0} width="auto">{{
-        reference: () => <li class={{hover: item.visible, active: item.active,"menu-item": true}}>{item.title}</li>,
+        reference: () => <li class={{hover: item.visible, active: item.active,"menu-item": true}}>{item.name}</li>,
         default: () => <div class="menu-card">
           {item.children.map(child => <div class="menu-line">
-            <div class="title">{child.title}</div>
+            <div class="title">{child.name}</div>
             <ul>
               {child.children.map(page => <li onClick={() => {
                 item.visible = false
                 router.push(page.path)
-              }} class={{"page-item": true, active: page.active}}>{page.title}</li>)}
+              }} class={{"page-item": true, active: page.active}}>{page.name}</li>)}
             </ul>
           </div>)}
         </div>

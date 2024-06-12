@@ -1,5 +1,5 @@
 
-/* 这个文件只处理渲染逻辑 */
+/* 这个文件只处理渲染逻辑, 不涉及响应式数据等问题 */
 import {computed, watch} from 'vue'
 import ComboGroup from './components/combo-group'
 
@@ -38,7 +38,7 @@ export function genTable(config, data) {
     data.forEach(item => item._checked = v)
   }
   const {columns, prop, ...otherProps} = config || {}
-  return <ElTable {...otherProps} key={prop} border data={data}>
+  return <ElTable class="remove-border-table table-in-form" {...otherProps} key={prop} border data={data}>
     {columns.map(col => genTableColumn({col, changeCheckStatus, checkedAll, indeterminate, parentKey: prop}))}
   </ElTable>
 }
@@ -49,8 +49,8 @@ export function genTableColumn({col, changeCheckStatus, checkedAll, indeterminat
   let {slots, ...otherProps} = col
   if (col.writeable) {
     slots = Object.assign({}, {
-      default: ({row}) => {
-        return genFormItem(col, row)
+      default: ({row, index}) => {
+        return genFormItem(col, row, index)
       }
     }, slots)
   }
@@ -73,7 +73,7 @@ export function genTableColumn({col, changeCheckStatus, checkedAll, indeterminat
     }}</ElTableColumn>
   }
   return <ElTableColumn {...otherProps}>{{
-    default: slots?.default,
+    default: col?.render || slots?.default,
     header: slots?.header
   }}</ElTableColumn>
 }
@@ -125,11 +125,28 @@ export function genFormItem(config, form) {
   }
   const {slots={}, ...formProps} = formItem || {}
   Object.assign(slots, {
-    // error: ({error}) => <el-tooltip content={error}><i class="el-form-item__error iconfont icon-info"></i></el-tooltip>,
+    // error: ({error}) => ,
     default: () => genField(config, form)
   })
+  function labelSlot() {
+    if (slots.label) return slots.label()
+    else {
+      return config.label && <div class="flex--middle">
+        {config.label}
+        {config.labelInfo && <el-tooltip content={config.labelInfo} placement="top" offset={4} popperClass="show-arrow-popover"><i class="iconfont icon-info"></i></el-tooltip>}
+      </div>
+    } 
+  }
+  function defaultSlot() {
+    if (slots.default) return slots.default()
+    else return genField(config, form)
+  }
 
-  return <el-form-item style={getFormItemStyle(config)} label={config.label} prop={config.prop} required={config.required} rules={rules} {...formProps}>{slots}</el-form-item>
+  return <el-form-item style={getFormItemStyle(config)} label={config.label} prop={config.prop} required={config.required} rules={rules} {...formProps}>{{
+    error: slots.error,
+    label: labelSlot,
+    default: defaultSlot 
+  }}</el-form-item>
 }
 
 export function renderItem(config, form) {
@@ -150,4 +167,29 @@ export function genForm (props) {
   return <el-form {...otherProps}>
     {props.configList.map(config => renderItem(config, props.form))}
   </el-form>
+}
+
+function genGridContent(config, form) {
+  if (config.render) {
+    return config.render(config, form)
+  }
+  let _content = ''
+  switch (config.type) {
+
+    default: 
+      _content = form[config.prop]
+  }
+  return _content || '-'
+}
+
+export function renderReadForm({configList, grid=4}, form) {
+  return <div class={`read-form-grid grid--${grid}`}>
+    {configList.map(config => {
+      const {slots} = config || {}
+      return <div class="grid-item">
+        <label>{slots.label ? slots.label() : config.label}</label>
+        <div class="grid-item-content">{genGridContent(config, form)}</div>
+      </div>
+    })}
+  </div>
 }

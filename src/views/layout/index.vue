@@ -30,11 +30,11 @@ export default {
     flex: auto;
     height: 100%;
     overflow: hidden;
+    background: var(--bg-color);
   }
 
   &main {
-    height: calc(100% - 70px);
-    background: var(--bg-color);
+    height: calc(100% - 78px);
   }
 }
 </style>

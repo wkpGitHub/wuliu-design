@@ -1,12 +1,13 @@
 import { reactive, computed, ref } from 'vue'
 import { genTableColumn } from './render'
-export function useTable({ columns, withHandler=true, handlerSlot, handlerWidth=90, editRow, deleteRow }, data = []) {
+export function useTable(config, data = []) {
+  const { columns, showHandler=true, handlerSlot, handlerWidth=90, editRow, deleteRow, ...otherProps } = config
   const state = reactive({
     data,
     columns
   })
 
-  if (withHandler) {
+  if (showHandler) {
     columns.push({
       label: '操作', type: 'handler', fixed: 'right', width: handlerWidth, slots: {
         default({ row, $index }) {
@@ -48,7 +49,7 @@ export function useTable({ columns, withHandler=true, handlerSlot, handlerWidth=
 
   function renderTable() {
     return <div class="page__main">
-      <ElTable row-key="id" class="remove-border-table" border ref={tableRef} data={state.data}>
+      <ElTable row-key="id" class="remove-border-table" border ref={tableRef} data={state.data} {...otherProps}>
         {state.columns.map(col => genTableColumn({ col, changeCheckStatus, checkedAll, indeterminate }))}
       </ElTable>
     </div>
